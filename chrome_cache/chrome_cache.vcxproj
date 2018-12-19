@@ -72,27 +72,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\ProgramFiles\boost\boost_1_69_0\boost;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\ProgramFiles\boost\boost_1_69_0\lib64-msvc-14.1;$(LibraryPath)</LibraryPath>
-    <SourcePath>E:\ProgramFiles\boost\boost_1_69_0\boost;$(SourcePath)</SourcePath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\ProgramFiles\boost\boost_1_69_0\boost;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\ProgramFiles\boost\boost_1_69_0\lib64-msvc-14.1;$(LibraryPath)</LibraryPath>
-    <SourcePath>E:\ProgramFiles\boost\boost_1_69_0\boost;$(SourcePath)</SourcePath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>E:\ProgramFiles\boost\boost_1_69_0\boost;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\ProgramFiles\boost\boost_1_69_0\lib64-msvc-14.1;$(LibraryPath)</LibraryPath>
-    <SourcePath>E:\ProgramFiles\boost\boost_1_69_0\boost;$(SourcePath)</SourcePath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>E:\ProgramFiles\boost\boost_1_69_0\boost;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\ProgramFiles\boost\boost_1_69_0\lib64-msvc-14.1;$(LibraryPath)</LibraryPath>
-    <SourcePath>E:\ProgramFiles\boost\boost_1_69_0\boost;$(SourcePath)</SourcePath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
