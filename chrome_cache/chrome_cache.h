@@ -1,15 +1,19 @@
 #pragma once
 #include "stdafx.h"
+#include "structs.h"
+#include "addr.h"
 
-string format_size(uint64_t size) {
-	vector<string> units = { "B", "KB","MB", "GB" };
-	for (string unit : units) {
-		if (size < 1024)return to_string(size) + unit;
-		size /= 1024;
+class Utils {
+public:
+	static string format_size(uint64_t size) {
+		vector<string> units = { "B", "KB","MB", "GB" };
+		for (string unit : units) {
+			if (size < 1024)return to_string(size) + unit;
+			size /= 1024;
+		}
+		return to_string(size * 1024) + units.back();
 	}
-	return to_string(size * 1024) + units.back();
-}
-
+};
 class HttpHeader {
 public:
 	HttpHeader() {}
@@ -28,51 +32,49 @@ public:
 	bool is_gzipped() {
 		return headers.count("content-encoding") != 0 && headers["content-encoding"] == "gzip";
 	}
+	static HttpHeader *load_http_header(char* data, int size) {
+		stringstream ss;
+		vector<string> src;
+		bool isheader = false;
+		for (int i = 0; i < size; i++) {
+			if (!isheader && data[i] == 'H' && i + 4 < size && string(&data[i], 4) == "HTTP") {
+				isheader = true;
+			}
+			if (isheader) {
+				if (data[i] == '\0') {
+					src.push_back(ss.str());
+					ss.str(""); ss.clear();
+					if (i + 1 < size && data[i + 1] == '\0') {
+						break;
+					}
+				} else {
+					ss << data[i];
+				}
+			}
+		}
+		HttpHeader *header = new HttpHeader();
+		string status_source = src.front();
+		header->status_source = status_source;
+		vector<string> status_re;
+		boost::algorithm::split(status_re, status_source, boost::is_any_of(" "));
+		if (status_re.size() == 2) {
+			header->protocol = status_re[0];
+			header->status_code = stoi(status_re[1]);
+		}
+		src.erase(src.begin());
+		for (string str : src) {
+			transform(str.begin(), str.end(), str.begin(), ::tolower);
+			vector<string> re;
+			boost::algorithm::split(re, str, boost::is_any_of(":"));
+			if (re.size() == 2) {
+				header->headers[re[0]] = re[1];
+			}
+		}
+		return header;
+	}
 private:
 	vector<string> text_mime_type = { "text/plain","text/css","text/csv","text/html","application/javascript","application/json","application/xml" };
 };
-
-HttpHeader *load_http_header(char* data, int size) {
-	stringstream ss;
-	vector<string> src;
-	bool isheader = false;
-	for (int i = 0; i < size; i++) {
-		if (!isheader && data[i] == 'H' && i + 4 < size && string(&data[i], 4) == "HTTP") {
-			isheader = true;
-		}
-		if (isheader) {
-			if (data[i] == '\0') {
-				src.push_back(ss.str());
-				ss.str(""); ss.clear();
-				if (i + 1 < size && data[i + 1] == '\0') {
-					break;
-				}
-			} else {
-				ss << data[i];
-			}
-		}
-	}
-	HttpHeader *header = new HttpHeader();
-	string status_source = src.front();
-	header->status_source = status_source;
-	vector<string> status_re;
-	boost::algorithm::split(status_re, status_source, boost::is_any_of(" "));
-	if (status_re.size() == 2) {
-		header->protocol = status_re[0];
-		header->status_code = stoi(status_re[1]);
-	}
-	src.erase(src.begin());
-	for (string str : src) {
-		transform(str.begin(), str.end(), str.begin(), ::tolower);
-		vector<string> re;
-		boost::algorithm::split(re, str, boost::is_any_of(":"));
-		if (re.size() == 2) {
-			header->headers[re[0]] = re[1];
-		}
-	}
-	return header;
-}
-
 class ChromeCacheAddress {
 public:
 	ChromeCacheAddress(uint32_t addr) {
@@ -215,7 +217,6 @@ private:
 		return 0;
 	}
 };
-
 class ChromeCacheBlockFiles {
 public:
 	ChromeCacheBlockFiles(filesystem::path cache_dir) {
@@ -240,7 +241,6 @@ public:
 private:
 	vector<ChromeCacheBlockFile> blockfiles;
 };
-
 class ChromeCache {
 public:
 	ChromeCache() {}
@@ -295,7 +295,7 @@ public:
 		if (entry->data_addrs.size() >= 2) {
 			//http header
 			char * header_data = get_data(entry->data_addrs[0], entry->data_lengths[0]);
-			HttpHeader * header = load_http_header(header_data, entry->data_lengths[0]);
+			HttpHeader * header = HttpHeader::load_http_header(header_data, entry->data_lengths[0]);
 			delete[] header_data;
 			cout << header->to_string() << flush;
 			//data
@@ -305,7 +305,7 @@ public:
 			} else {
 				uint32_t size = entry->data_lengths[1];
 				save_as_file(path, addr, size, header->is_gzipped());
-				cout << "size=" << format_size(size) << endl;
+				cout << "size=" << Utils::format_size(size) << endl;
 			}
 		}
 	}
