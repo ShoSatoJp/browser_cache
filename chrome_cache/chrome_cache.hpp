@@ -15,7 +15,21 @@ public:
 		}
 		return to_string(size * 1024) + units.back();
 	}
+	static void copy_files(string dir, string dest) {
+		if (!filesystem::exists(dest) && !filesystem::create_directories(dest)) {
+			throw runtime_error("cannot create directory:" + dest);
+		}
+		for (string file : files) {
+			filesystem::copy_file(filesystem::path(dir) / file, filesystem::path(dest) / file, filesystem::copy_options::overwrite_existing);
+		}
+	}
+	//static void delete_files(string dest) {
+	//	for (string file : files) filesystem::remove(filesystem::path(dest) / file);
+
+	//}
+	static const vector<string> files;
 };
+
 class HttpHeader {
 public:
 	HttpHeader() {}
@@ -89,19 +103,21 @@ class ChromeCache {
 public:
 	ChromeCache() {}
 	//ChromeCache(string cache_dir) :ChromeCache(filesystem::path(cache_dir)) {}
-	ChromeCache(filesystem::path);
+	ChromeCache(filesystem::path, filesystem::path);
 	void show_keys();
 	ChromeCacheEntry * get_entry(int);
 	ChromeCacheEntry * get_entry(string);
 	void save(string, ChromeCacheEntry*);
+	void find_save(string key, string path);
 	void close();
 	int count();
 private:
 	stringstream decompress_gzip(char*, int);
 	char* get_data(ChromeCacheAddress, int);
 	void save_as_file(string, ChromeCacheAddress, int, bool);
-	void save_separated_file(string, ChromeCacheAddress);
+	void save_separated_file(filesystem::path, ChromeCacheAddress);
 	filesystem::path cache_dir;
+	filesystem::path temp_cache_dir;
 	IndexHeader header;
 	vector<ChromeCacheAddress> addrs;
 	ChromeCacheBlockFiles *blockfiles = nullptr;
