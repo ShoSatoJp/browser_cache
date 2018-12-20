@@ -1,5 +1,5 @@
 /.vs
-Debug/
-Release/
+*Debug/
+*Release/
 static_link/
 *temp*/
