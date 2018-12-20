@@ -102,7 +102,6 @@ private:
 class ChromeCache {
 public:
 	ChromeCache() {}
-	//ChromeCache(string cache_dir) :ChromeCache(filesystem::path(cache_dir)) {}
 	ChromeCache(filesystem::path, filesystem::path);
 	void show_keys();
 	ChromeCacheEntry * get_entry(int);

@@ -1,15 +1,6 @@
 #pragma once
-//#include "stdafx.h"
 #include <stdio.h>
 #include <tchar.h>
-//#include <iostream>
-//#include <fstream>
-//#include <bitset>
-//#include <vector>
-//#include <string>
-//#include <sstream>
-//#include <filesystem>
-//#include <map>
 
 #include "structs.hpp"
 

@@ -14,6 +14,7 @@ int main(int argc, char*argv[]) {
 			("cache_dir,c", value<string>()->default_value(""), "cache directory")
 			("key,k", value<string>()->default_value(""), "key(url)")
 			("path,p", value<string>()->default_value(""), "path")
+			("update_index,u", bool_switch()->default_value(true), "update index (=true)")
 			("help,h", "help")
 			("version,v", "version");
 
@@ -25,9 +26,10 @@ int main(int argc, char*argv[]) {
 		string cache_dir_ = vm["cache_dir"].as<string>();
 		string key_ = vm["key"].as<string>();
 		string path_ = vm["path"].as<string>();
+		bool update_index_ = vm["update_index"].as<bool>();
 		if (cache_dir_.size() && key_.size() && path_.size()) {
 			try {
-				Utils::copy_files(cache_dir_, dest);
+				if (update_index_) Utils::copy_files(cache_dir_, dest);
 				ChromeCache cc(cache_dir_, dest);
 				cc.find_save(key_, path_);
 			} catch (const std::exception&e) {
