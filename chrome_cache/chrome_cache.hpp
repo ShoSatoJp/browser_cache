@@ -23,10 +23,6 @@ public:
 			filesystem::copy_file(filesystem::path(dir) / file, filesystem::path(dest) / file, filesystem::copy_options::overwrite_existing);
 		}
 	}
-	//static void delete_files(string dest) {
-	//	for (string file : files) filesystem::remove(filesystem::path(dest) / file);
-
-	//}
 	static const vector<string> files;
 };
 
