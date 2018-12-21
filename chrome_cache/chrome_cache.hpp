@@ -39,7 +39,7 @@ public:
 	map<string, string> headers;
 	string to_string();
 	bool is_gzipped();
-	static HttpHeader *load_http_header(char*, int);
+	static HttpHeader load_http_header(char*, int);
 };
 
 class ChromeCacheAddress {
@@ -64,25 +64,32 @@ private:
 	static const uint32_t kFileNameMask = 0x0FFFFFFF;
 };
 
+class ChromeCache;
+
 class ChromeCacheEntry {
 public:
-	ChromeCacheEntry(EntryStore*, string);
+	ChromeCacheEntry() {}
+	ChromeCacheEntry(EntryStore*, string, ChromeCache *cc);
 	EntryStore *es;
 	string key;
 	vector<uint32_t> data_lengths;
 	vector<ChromeCacheAddress> data_addrs;
 	int data_count;
+	HttpHeader get_header();
+	ChromeCache * cc = nullptr;
+	void save(string path);
 };
 class ChromeCacheBlockFile {
 public:
 	ChromeCacheBlockFile() {}
-	ChromeCacheBlockFile(FileType, filesystem::path);
+	ChromeCacheBlockFile(FileType, filesystem::path, ChromeCache * cc);
 	char* get_data(ChromeCacheAddress, int);
 	void write_as_file(string, ChromeCacheAddress, int);
 	ChromeCacheEntry* get_entry(ChromeCacheAddress);
 	void close();
 	BlockFileHeader header;
 private:
+	ChromeCache * cc = nullptr;
 	FileType filetype;
 	ifstream ifs;
 	uint32_t data_start;
@@ -91,28 +98,33 @@ private:
 
 class ChromeCacheBlockFiles {
 public:
-	ChromeCacheBlockFiles(filesystem::path);
+	ChromeCacheBlockFiles(filesystem::path, ChromeCache * cc);
 	ChromeCacheEntry * get_entry(ChromeCacheAddress);
 	char* get_data(ChromeCacheAddress, int);
 	void close();
 private:
+	ChromeCache * cc = nullptr;
 	vector<ChromeCacheBlockFile> blockfiles;
 };
 
 class ChromeCache {
 public:
 	ChromeCache() {}
-	ChromeCache(filesystem::path, filesystem::path);
+	ChromeCache(string cache_dir, const string temp_cache_dir, bool update_index = true)
+		:ChromeCache(filesystem::path(cache_dir), filesystem::path(temp_cache_dir), update_index) {}
+	ChromeCache(filesystem::path cache_dir, filesystem::path temp_cache_dir, bool update_index);
 	void show_keys();
-	ChromeCacheEntry * get_entry(int);
-	ChromeCacheEntry * get_entry(string);
-	void save(string, ChromeCacheEntry*);
+	vector<string> keys();
+	ChromeCacheEntry get_entry(int i);
+	ChromeCacheEntry find(string key);
+	ChromeCacheEntry* get_entry_ptr(string key);
+	void save(string, ChromeCacheEntry);
 	void find_save(string key, string path);
 	void close();
 	int count();
+	char* get_data(ChromeCacheAddress, int);
 private:
 	stringstream decompress_gzip(char*, int);
-	char* get_data(ChromeCacheAddress, int);
 	void save_as_file(string, ChromeCacheAddress, int, bool);
 	void save_separated_file(filesystem::path, ChromeCacheAddress);
 	filesystem::path cache_dir;

@@ -9,13 +9,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "firefox_cache", "firefox_ca
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_cs", "test_cs\test_cs.csproj", "{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		python_debug|Any CPU = python_debug|Any CPU
+		python_debug|x64 = python_debug|x64
+		python_debug|x86 = python_debug|x86
+		python_release|Any CPU = python_release|Any CPU
+		python_release|x64 = python_release|x64
+		python_release|x86 = python_release|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
@@ -28,10 +32,20 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.Debug|x64.ActiveCfg = Debug|x64
-		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.Debug|x64.Build.0 = Debug|x64
+		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.Debug|x64.ActiveCfg = python_debug|x64
+		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.Debug|x64.Build.0 = python_debug|x64
 		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.Debug|x86.ActiveCfg = Debug|Win32
 		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.Debug|x86.Build.0 = Debug|Win32
+		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.python_debug|Any CPU.ActiveCfg = python_debug|Win32
+		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.python_debug|x64.ActiveCfg = python_debug|x64
+		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.python_debug|x64.Build.0 = python_debug|x64
+		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.python_debug|x86.ActiveCfg = python_debug|Win32
+		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.python_debug|x86.Build.0 = python_debug|Win32
+		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.python_release|Any CPU.ActiveCfg = python_release|Win32
+		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.python_release|x64.ActiveCfg = python_release|x64
+		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.python_release|x64.Build.0 = python_release|x64
+		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.python_release|x86.ActiveCfg = python_release|Win32
+		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.python_release|x86.Build.0 = python_release|Win32
 		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.Release|Any CPU.ActiveCfg = Release|Win32
 		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.Release|x64.ActiveCfg = Release|x64
 		{1D2CE2CE-DC01-4E12-979C-30D3A875F781}.Release|x64.Build.0 = Release|x64
@@ -53,6 +67,16 @@ Global
 		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.Debug|x64.Build.0 = Debug|x64
 		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.Debug|x86.ActiveCfg = Debug|Win32
 		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.Debug|x86.Build.0 = Debug|Win32
+		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.python_debug|Any CPU.ActiveCfg = python_debug|Win32
+		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.python_debug|x64.ActiveCfg = python_debug|x64
+		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.python_debug|x64.Build.0 = python_debug|x64
+		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.python_debug|x86.ActiveCfg = python_debug|Win32
+		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.python_debug|x86.Build.0 = python_debug|Win32
+		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.python_release|Any CPU.ActiveCfg = python_release|Win32
+		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.python_release|x64.ActiveCfg = python_release|x64
+		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.python_release|x64.Build.0 = python_release|x64
+		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.python_release|x86.ActiveCfg = python_release|Win32
+		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.python_release|x86.Build.0 = python_release|Win32
 		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.Release|Any CPU.ActiveCfg = Release|Win32
 		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.Release|x64.ActiveCfg = Release|x64
 		{BDF6472E-A71F-423E-AA62-6DDD8D6DBCAA}.Release|x64.Build.0 = Release|x64
@@ -75,6 +99,16 @@ Global
 		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.Debug|x64.Build.0 = Debug|x64
 		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.Debug|x86.ActiveCfg = Debug|Win32
 		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.Debug|x86.Build.0 = Debug|Win32
+		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.python_debug|Any CPU.ActiveCfg = python_debug|Win32
+		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.python_debug|x64.ActiveCfg = python_debug|x64
+		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.python_debug|x64.Build.0 = python_debug|x64
+		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.python_debug|x86.ActiveCfg = python_debug|Win32
+		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.python_debug|x86.Build.0 = python_debug|Win32
+		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.python_release|Any CPU.ActiveCfg = python_release|Win32
+		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.python_release|x64.ActiveCfg = python_release|x64
+		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.python_release|x64.Build.0 = python_release|x64
+		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.python_release|x86.ActiveCfg = python_release|Win32
+		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.python_release|x86.Build.0 = python_release|Win32
 		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.Release|Any CPU.ActiveCfg = Release|Win32
 		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.Release|x64.ActiveCfg = Release|x64
 		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.Release|x64.Build.0 = Release|x64
@@ -92,30 +126,6 @@ Global
 		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.static_link|x64.Build.0 = Release|x64
 		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.static_link|x86.ActiveCfg = Release|Win32
 		{2837B3FA-8E90-401E-87F4-2EFE9D6C6FF3}.static_link|x86.Build.0 = Release|Win32
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.Debug|x64.Build.0 = Debug|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.Debug|x86.Build.0 = Debug|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.Release|x64.ActiveCfg = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.Release|x64.Build.0 = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.Release|x86.ActiveCfg = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.Release|x86.Build.0 = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.static_link_release|Any CPU.ActiveCfg = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.static_link_release|Any CPU.Build.0 = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.static_link_release|x64.ActiveCfg = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.static_link_release|x64.Build.0 = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.static_link_release|x86.ActiveCfg = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.static_link_release|x86.Build.0 = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.static_link|Any CPU.ActiveCfg = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.static_link|Any CPU.Build.0 = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.static_link|x64.ActiveCfg = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.static_link|x64.Build.0 = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.static_link|x86.ActiveCfg = Release|Any CPU
-		{B8FA2F9E-789C-4B61-8E5E-A5F304B88F8F}.static_link|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

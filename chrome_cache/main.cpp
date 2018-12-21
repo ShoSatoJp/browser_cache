@@ -29,8 +29,7 @@ int main(int argc, char*argv[]) {
 		bool update_index_ = vm["update_index"].as<bool>();
 		if (cache_dir_.size() && key_.size() && path_.size()) {
 			try {
-				if (update_index_) Utils::copy_files(cache_dir_, dest);
-				ChromeCache cc(cache_dir_, dest);
+				ChromeCache cc(cache_dir_, dest, update_index_);
 				cc.find_save(key_, path_);
 			} catch (const std::exception&e) {
 				cout << e.what() << endl;
@@ -46,7 +45,6 @@ int main(int argc, char*argv[]) {
 		getline(cin, cache_dir);
 		ChromeCache cc;
 	RELOAD:
-		Utils::copy_files(cache_dir, dest);
 		try {
 			cc = ChromeCache(cache_dir, dest);
 			cout << cc.count() << endl;
