@@ -47,7 +47,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="build.md" />
-    <None Include="THIRD_PARTY_LIBRARY_LICENSES.md" />
-    <None Include="README.md" />
   </ItemGroup>
 </Project>
