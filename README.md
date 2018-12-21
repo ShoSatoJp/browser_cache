@@ -2,7 +2,6 @@
 付属のバイナリはすべてC++ランタイムライブラリを含むx64版です。
 ## pythonモジュールとしての使用
 ### ビルド
-python_debug構成でビルドします。
 以下のライブラリを適宜インクルードディレクトリに追加したり、リンクしたりする必要があります。
 ```
 include:
@@ -72,3 +71,41 @@ link:
 ##### オプションなしで起動する場合
 インタラクティブに使用できます。
 ```key``` 入力時に ```list``` を使用してURL一覧を表示できます。また、```reload``` を使用してインデックスをリロードします。
+
+# firefox_cache
+付属のバイナリはすべてC++ランタイムライブラリを含むx64版です。
+## pythonモジュールとしての使用
+### ビルド
+以下のライブラリを適宜インクルードディレクトリに追加したり、リンクしたりする必要があります。
+```
+include:
+    boost/algorithm/string/trim.hpp
+    boost/algorithm/string/split.hpp
+    pybind11/pybind11.h
+    pybind11/stl.h
+
+link:
+    python36.lib
+```
+
+### 使い方
+ビルドして出てきた```firefox_cache.pyd```をインポートします。
+```python
+from firefox_cache import FirefoxCache
+
+cc = FirefoxCache("<firefox_cache_dir>")
+
+# ヘッダーとかも見るとき
+entry = cc.find("<key(url)>")
+
+print(entry.get_header().headers["content-type"])
+
+entry.save("<output_path>")
+
+# 保存するだけ
+cc.find_save("<key(url)>","<output_path>")
+```
+```<firefox_cache_dir>```はFirefoxのキャッシュフォルダです。通常のキャッシュフォルダは```\AppData\Local\Mozilla\Firefox\Profiles\<user>\cache2\```です。 ```<user>``` は環境に依ります。  
+```<key(url)>``` は検索対象のURL、 ```<output_path>``` は保存先のパスです。
+
+※コンソールアプリとしての使用はサポートしていません。

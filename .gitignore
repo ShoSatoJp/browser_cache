@@ -1,5 +1,10 @@
 /.vs
 *Debug/
+*debug/
 *Release/
 static_link/
 *temp*/
+*.gif
+*.jpg
+*.png
+*.py

@@ -8,7 +8,7 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(chrome_cache, m) {
 	py::class_<ChromeCache>(m, "ChromeCache")
-		.def(py::init<string, string, bool>(), py::arg("cache_dir"), py::arg("temp_dir"), py::arg("update_index") = true)
+		.def(py::init<string, string, bool>(), py::arg("cache_dir"), py::arg("temp_dir") = "chrome_cache_temp", py::arg("update_index") = true)
 		.def("keys", &ChromeCache::keys)
 		.def("find_save", &ChromeCache::find_save, py::arg("key"), py::arg("path"))
 		.def("find", &ChromeCache::find, py::arg("key"));
