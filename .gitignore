@@ -8,3 +8,6 @@ static_link/
 *.jpg
 *.png
 *.py
+*gui/
+chrome_cache/bin
+firefox_cache/bin

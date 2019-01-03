@@ -11,16 +11,21 @@ PYBIND11_MODULE(chrome_cache, m) {
 		.def(py::init<string, string, bool>(), py::arg("cache_dir"), py::arg("temp_dir") = "chrome_cache_temp", py::arg("update_index") = true)
 		.def("keys", &ChromeCache::keys)
 		.def("find_save", &ChromeCache::find_save, py::arg("key"), py::arg("path"))
-		.def("find", &ChromeCache::find, py::arg("key"));
+		//.def("find", &ChromeCache::find, py::arg("key"))
+		.def("find_ptr", &ChromeCache::find_ptr, py::arg("key"))
+		.def("find_map_ptr", &ChromeCache::find_map_ptr, py::arg("key"))
+		;
 
 	py::class_<ChromeCacheEntry>(m, "ChromeCacheEntry")
 		.def_readonly("key", &ChromeCacheEntry::key)
 		.def("get_header", &ChromeCacheEntry::get_header)
-		.def("save", &ChromeCacheEntry::save);
+		.def("save", &ChromeCacheEntry::save)
+		;
 
 	py::class_<HttpHeader>(m, "HttpHeader")
 		.def_readonly("status_code", &HttpHeader::status_code)
 		.def_readonly("status_source", &HttpHeader::status_source)
 		.def_readonly("protocol", &HttpHeader::protocol)
-		.def_readonly("headers", &HttpHeader::headers);
+		.def_readonly("headers", &HttpHeader::headers)
+		;
 }

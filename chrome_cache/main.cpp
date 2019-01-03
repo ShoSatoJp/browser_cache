@@ -4,6 +4,11 @@
 
 using namespace std;
 
+//data length
+//1 = header only. (302 Found or 204 No Content or content-length==0)
+//2 = usually
+//3 = what is the third data??
+
 int main(int argc, char*argv[]) {
 	const string dest = "chrome_cache_temp";
 	if (argc > 1) {
@@ -17,7 +22,6 @@ int main(int argc, char*argv[]) {
 			("update_index,u", bool_switch()->default_value(true), "update index (=true)")
 			("help,h", "help")
 			("version,v", "version");
-
 		variables_map vm;
 		store(parse_command_line(argc, argv, description), vm);
 		notify(vm);
@@ -52,6 +56,35 @@ int main(int argc, char*argv[]) {
 			cout << ex.what() << endl;
 			return 0;
 		}
+
+		////////////////////////////////////////////////////////////////////////////////
+		//try {
+		//	for (ChromeCacheEntry *en : cc.get_entries()) {
+		//		int size = en->data_addrs.size();
+		//		if (size!= 2) {
+		//			cout << size << "  " << en->key << endl;
+		//			//cout << en->get_header().to_string() << endl;
+		//		}
+		//	}
+		//} catch (const std::exception& e) {
+		//	cout << e.what() << endl;
+		//}
+		//string u= "https://divnil.com/wallpaper/iphone/img/app/b/o/bokeh-images-hd-bokeh-install-bokeh-iphone-wallpaper-heart-shape-red-640x960_57928160ee11f46f602993ce22e01b13_s.jpg";
+		//ChromeCacheEntry en = cc.find(u);
+		//cout << en.key << endl;
+		//cout <<"key_len"<< en.es->key_len << endl;
+		//cout << "long_key"<<en.es->long_key << endl;
+		//cout << en.get_header().to_string() << endl;
+		//for (int i : en.data_lengths) {
+		//	cout << i << " ";
+		//}
+		//cout << endl;
+		//for (ChromeCacheAddress addr : en.data_addrs) {
+		//	cout << addr.tostring() << endl;
+		//}
+		//return 0;
+		////////////////////////////////////////////////////////////////////////////////
+
 		while (true) {
 			cout << "-----------------------------------" << endl;
 			string key, path;
