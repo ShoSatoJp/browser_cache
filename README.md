@@ -1,9 +1,9 @@
 ## Browse images on your Chrome browser.
-![](./README/003.png)
+![](./README/001.png)
 ## Launch "Chrome Cache GUI" and specify chrome cache directory and other parameters. Then, click "Search Images" and click the image.
-![](./README/005.png)
+![](./README/002.png)
 ## Now, you can "save" the image from cache without connecting internet when you save.
-![](./README/006.png)
+![](./README/003.png)
 
 
 <hr>
