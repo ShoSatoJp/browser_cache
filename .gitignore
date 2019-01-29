@@ -7,7 +7,9 @@ static_link/
 *.gif
 *.jpg
 *.png
-*.py
+*.pyd
+*.exe
 *gui/
 chrome_cache/bin
+chrome_cache/build/
 firefox_cache/bin

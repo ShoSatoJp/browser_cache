@@ -6,19 +6,12 @@ chrome、operaでの動作確認済みです。
 以下のライブラリを適宜インクルードディレクトリに追加したり、リンクしたりする必要があります。
 ```
 include:
-    boost/algorithm/string/trim.hpp
-    boost/algorithm/string/split.hpp
-    boost/iostreams/filtering_stream.hpp
-    boost/iostreams/filter/gzip.hpp
-    boost/iostreams/copy.hpp
     pybind11/pybind11.h
     pybind11/stl.h
 
 link:
-    boost_iostreams-vc140-mt-gd.lib
-    boost_program_options-vc140-mt-gd.lib
     zlibd.lib
-    python36.lib
+    python37.lib
 ```
 
 ### 使い方
@@ -42,6 +35,22 @@ cc.find_save("<key(url)>","<output_path>")
 ```<temp_dir>```はファイルオープンの競合を避けるために使用するコピー先の作業用ディレクトリです。  
 ```<key(url)>``` は検索対象のURL、 ```<output_path>``` は保存先のパスです。※カレントディレクトリに保存する場合は接頭辞として ```./``` をつける必要があります。
 
+## node.jsモジュールとしての使用
+### ビルド
+```sh
+> node-gyp configure --python <python2 executable>  
+> node-gyp build
+```
+### 使い方
+```js
+var chrome_cache = require('chrome_cache');
+var cc = new chrome_cache.ChromeCache('<chrome_cache_dir>','<temp_dir>');
+//keys
+console.log(cc.keys().slice(0, 10));
+//save
+cc.find_save('<key>','<path>');
+```
+
 ## コンソールアプリとしての使用
 ### ビルド
 static_debug構成でビルドします。
@@ -56,8 +65,6 @@ include:
     boost/program_options.hpp
 
 link:
-    boost_iostreams-vc140-mt-gd.lib
-    boost_program_options-vc140-mt-gd.lib
     zlibd.lib
 ```
 

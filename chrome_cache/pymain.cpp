@@ -11,9 +11,10 @@ PYBIND11_MODULE(chrome_cache, m) {
 		.def(py::init<string, string, bool>(), py::arg("cache_dir"), py::arg("temp_dir") = "chrome_cache_temp", py::arg("update_index") = true)
 		.def("keys", &ChromeCache::keys)
 		.def("find_save", &ChromeCache::find_save, py::arg("key"), py::arg("path"))
-		//.def("find", &ChromeCache::find, py::arg("key"))
-		.def("find_ptr", &ChromeCache::find_ptr, py::arg("key"))
-		.def("find_map_ptr", &ChromeCache::find_map_ptr, py::arg("key"))
+		.def("find", &ChromeCache::find, py::arg("key"))
+		//.def("find_ptr", &ChromeCache::find_ptr, py::arg("key"))
+		.def("find_map", &ChromeCache::find_map, py::arg("key"))
+		//.def("find_map_ptr", &ChromeCache::find_map_ptr, py::arg("key"))
 		;
 
 	py::class_<ChromeCacheEntry>(m, "ChromeCacheEntry")

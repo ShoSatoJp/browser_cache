@@ -2,8 +2,10 @@
 #include "stdafx.hpp"
 #include "structs.hpp"
 #include "addr.hpp"
+#include <experimental/filesystem>
 
 using namespace std;
+using namespace std::experimental;
 
 class Utils {
 public:
@@ -16,11 +18,11 @@ public:
 		return to_string(size * 1024) + units.back();
 	}
 	static void copy_files(const string &dir, const string &dest) {
-		if (!filesystem::exists(dest) && !filesystem::create_directories(dest)) {
+		if (!experimental::filesystem::exists(dest) && !experimental::filesystem::create_directories(dest)) {
 			throw runtime_error("cannot create directory:" + dest);
 		}
 		for (string file : files) {
-			filesystem::copy_file(filesystem::path(dir) / file, filesystem::path(dest) / file, filesystem::copy_options::overwrite_existing);
+			experimental::filesystem::copy_file(experimental::filesystem::path(dir) / file, experimental::filesystem::path(dest) / file, experimental::filesystem::copy_options::overwrite_existing);
 		}
 	}
 	static const vector<string> files;
@@ -99,7 +101,7 @@ private:
 class ChromeCacheBlockFile {
 public:
 	ChromeCacheBlockFile() {}
-	ChromeCacheBlockFile(FileType, const filesystem::path&, ChromeCache * cc);
+	ChromeCacheBlockFile(FileType, const experimental::filesystem::path&, ChromeCache * cc);
 	char* get_data(const ChromeCacheAddress&, int);
 	void write_as_file(const string&, const ChromeCacheAddress&, int);
 	ChromeCacheEntry* get_entry(const ChromeCacheAddress&);
@@ -115,7 +117,7 @@ private:
 
 class ChromeCacheBlockFiles {
 public:
-	ChromeCacheBlockFiles(const filesystem::path&, ChromeCache * cc);
+	ChromeCacheBlockFiles(const experimental::filesystem::path&, ChromeCache * cc);
 	ChromeCacheEntry * get_entry(const ChromeCacheAddress&);
 	char* get_data(const ChromeCacheAddress&, int);
 	void close();
@@ -128,15 +130,15 @@ class ChromeCache {
 public:
 	ChromeCache() {}
 	ChromeCache(const string &cache_dir, const string& temp_cache_dir, bool update_index = true)
-		:ChromeCache(filesystem::path(cache_dir), filesystem::path(temp_cache_dir), update_index) {}
-	ChromeCache(const filesystem::path& cache_dir, const filesystem::path &temp_cache_dir, bool update_index);
+		:ChromeCache(experimental::filesystem::path(cache_dir), experimental::filesystem::path(temp_cache_dir), update_index) {}
+	ChromeCache(const experimental::filesystem::path& cache_dir, const experimental::filesystem::path &temp_cache_dir, bool update_index);
 	void show_keys();
 	vector<string> keys();
-	//vector<ChromeCacheEntry*> get_entries();
 	unique_ptr<ChromeCacheEntry> get_entry(int i);
-	//ChromeCacheEntry find(const string &key);
-	unique_ptr<ChromeCacheEntry> find_ptr(const string &key);
-	unique_ptr<ChromeCacheEntry> find_map_ptr(const string &key);
+	ChromeCacheEntry find(const string &key);
+	ChromeCacheEntry find_map(const string &key);
+	ChromeCacheEntry* find_ptr(const string &key);
+	ChromeCacheEntry* find_map_ptr(const string &key);
 	void save(const string&, const ChromeCacheEntry&);
 	void find_save(const string& key, const string &path);
 	void close();
@@ -145,9 +147,9 @@ public:
 private:
 	stringstream & decompress_gzip(char*, int);
 	void save_as_file(const string&, const ChromeCacheAddress&, int, bool);
-	void save_separated_file(const filesystem::path&, const ChromeCacheAddress&);
-	filesystem::path cache_dir;
-	filesystem::path temp_cache_dir;
+	void save_separated_file(const experimental::filesystem::path&, const ChromeCacheAddress&);
+	experimental::filesystem::path cache_dir;
+	experimental::filesystem::path temp_cache_dir;
 	IndexHeader header;
 	vector<ChromeCacheAddress> addrs;
 	ChromeCacheBlockFiles *blockfiles = nullptr;

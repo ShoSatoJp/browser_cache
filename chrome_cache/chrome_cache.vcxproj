@@ -254,7 +254,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\ProgramFiles\include;C:\Program Files\vcpkg\installed\x64-windows\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\User\.node-gyp\10.15.0\include\node;C:\Users\User\.node-gyp\10.15.0\src;C:\Users\User\.node-gyp\10.15.0\deps\openssl\config;C:\Users\User\.node-gyp\10.15.0\deps\openssl\openssl\include;C:\Users\User\.node-gyp\10.15.0\deps\uv\include;C:\Users\User\.node-gyp\10.15.0\deps\zlib;C:\Users\User\.node-gyp\10.15.0\deps\v8\include;C:\Users\User\node_modules\nan;E:\ProgramFiles\include;C:\Program Files\vcpkg\installed\x64-windows\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files\vcpkg\installed\x64-windows\debug\lib;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SourcePath)</SourcePath>
     <OutDir>$(ProjectDir)Debug</OutDir>
@@ -325,7 +325,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\ProgramFiles\include;C:\Program Files\vcpkg\installed\x64-windows\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\User\.node-gyp\10.15.0\include\node;C:\Users\User\.node-gyp\10.15.0\src;C:\Users\User\.node-gyp\10.15.0\deps\openssl\config;C:\Users\User\.node-gyp\10.15.0\deps\openssl\openssl\include;C:\Users\User\.node-gyp\10.15.0\deps\uv\include;C:\Users\User\.node-gyp\10.15.0\deps\zlib;C:\Users\User\.node-gyp\10.15.0\deps\v8\include;C:\Users\User\node_modules\nan;E:\ProgramFiles\include;C:\Program Files\vcpkg\installed\x64-windows\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files\vcpkg\installed\x64-windows\debug\lib;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SourcePath)</SourcePath>
     <OutDir>$(ProjectDir)Debug</OutDir>
@@ -741,6 +741,8 @@
   <ItemGroup>
     <ClInclude Include="addr.hpp" />
     <ClInclude Include="chrome_cache.hpp" />
+    <ClInclude Include="node_chrome_cache.hpp" />
+    <ClInclude Include="node_chrome_cache_entry.hpp" />
     <ClInclude Include="stdafx.hpp" />
     <ClInclude Include="structs.hpp" />
     <ClInclude Include="targetver.hpp" />
@@ -752,6 +754,14 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='firefox_cache_python_debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='python_debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='firefox_cache_python_debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="nodemain.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </AdditionalIncludeDirectories>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="pymain.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='static_link_debug|Win32'">true</ExcludedFromBuild>
@@ -789,6 +799,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="binding.gyp" />
     <None Include="build.md" />
   </ItemGroup>
   <ItemGroup>
