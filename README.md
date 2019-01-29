@@ -1,3 +1,13 @@
+## Browse images on your Chrome browser.
+![](./README/003.png)
+## Launch "Chrome Cache GUI" and specify chrome cache directory and other parameters. Then, click "Search Images" and click the image.
+![](./README/005.png)
+## Now, you can "save" the image from cache without connecting internet when you save.
+![](./README/006.png)
+
+
+<hr>
+
 # chrome_cache
 chrome、operaでの動作確認済みです。  
 付属のバイナリはすべてC++ランタイムライブラリを含むx64版です。  

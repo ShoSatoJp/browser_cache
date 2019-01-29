@@ -6,7 +6,6 @@ static_link/
 *temp*/
 *.gif
 *.jpg
-*.png
 *.pyd
 *.exe
 *gui/
