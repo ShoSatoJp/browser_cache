@@ -20,3 +20,8 @@ x64/
 *.pyd
 *.exe
 *.zip
+
+
+#chrome_cache_gui
+form.json
+size_cache.json
