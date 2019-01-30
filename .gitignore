@@ -5,12 +5,12 @@ static_link/
 chrome_cache/bin
 chrome_cache/build/
 firefox_cache/bin
+browser_cache_gui/
 
 *Debug/
 *debug/
 *Release/
 *temp*/
-*gui/
 *bin/
 
 #file extensions
