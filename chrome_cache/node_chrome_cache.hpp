@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <nan.h>
 #include "chrome_cache.hpp"
-//#include "node_chrome_cache_entry.hpp"
+#include "node_chrome_cache_entry.hpp"
 
 class NChromeCache :public Nan::ObjectWrap {
 public:
@@ -16,7 +16,7 @@ private:
 	//node.js prototype method
 	static NAN_METHOD(Keys);
 	static NAN_METHOD(FindSave);
-	//static NAN_METHOD(Find);
+	static NAN_METHOD(Find);
 
 	static Nan::Persistent<v8::Function> constructor;
 	ChromeCache *cc_;
@@ -31,7 +31,7 @@ NAN_MODULE_INIT(NChromeCache::Init) {
 
 	SetPrototypeMethod(tpl, "keys", Keys);
 	SetPrototypeMethod(tpl, "find_save", FindSave);
-	//SetPrototypeMethod(tpl, "find", Find);
+	SetPrototypeMethod(tpl, "find", Find);
 
 	constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
 	Nan::Set(target, Nan::New("ChromeCache").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
@@ -82,16 +82,25 @@ NAN_METHOD(NChromeCache::FindSave) {
 	}
 }
 
-//NAN_METHOD(NChromeCache::Find) {
-//	string key = info[0]->IsUndefined() ? "" : string(*v8::String::Utf8Value(info[0].As<v8::String>()));
-//	NChromeCache* obj = Nan::ObjectWrap::Unwrap<NChromeCache>(info.Holder());
-//	v8::Isolate* isolate = info.GetIsolate();
-//	try {
-//		ChromeCacheEntry *entry = obj->cc_->find_map_ptr(key);
-//		Nan::NewInstance(NChromeCache::New)
-//		info.GetReturnValue().Set(NChromeCacheEntry::(entry).handle());
-//	} catch (const std::exception& e) {
-//		isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, e.what())));
-//	}
-//}
-//
+NAN_METHOD(NChromeCache::Find) {
+	string key = info[0]->IsUndefined() ? "" : string(*v8::String::Utf8Value(info[0].As<v8::String>()));
+	NChromeCache* obj = Nan::ObjectWrap::Unwrap<NChromeCache>(info.Holder());
+	v8::Isolate* isolate = info.GetIsolate();
+	try {
+		ChromeCacheEntry *entry = obj->cc_->find_map_ptr(key);
+
+		v8::EscapableHandleScope scope(isolate);
+		v8::Handle<v8::Value> argv[] = { v8::Boolean::New(isolate,true) };
+		v8::Local<v8::Context> context = isolate->GetCurrentContext();
+		v8::Local<v8::Function> cons = v8::Local<v8::Function>::New(isolate, NChromeCacheEntry::constructor);
+		v8::Handle<v8::Object> obj = cons->NewInstance(context, 1, argv).ToLocalChecked();
+
+		NChromeCacheEntry* n = NChromeCacheEntry::Unwrap<NChromeCacheEntry>(obj);
+		n->entry_ = entry;
+
+		info.GetReturnValue().Set(scope.Escape(obj));
+	} catch (const std::exception& e) {
+		isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, e.what())));
+	}
+}
+

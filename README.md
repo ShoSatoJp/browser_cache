@@ -1,129 +1,138 @@
+# Chrome Cache GUI
 ## Browse images on your Chrome browser.
 ![](./README/001.png)
 ## Launch "Chrome Cache GUI" and specify chrome cache directory and other parameters. Then, click "Search Images" and click the image.
 ![](./README/002.png)
-## Now, you can "save" the image from cache without connecting internet when you save.
+## Now, you can "save" images from cache without connecting internet when you save.
 ![](./README/003.png)
 
 
 <hr>
 
-# chrome_cache
-chrome、operaでの動作確認済みです。  
-付属のバイナリはすべてC++ランタイムライブラリを含むx64版です。  
-## pythonモジュールとしての使用
-### ビルド
-以下のライブラリを適宜インクルードディレクトリに追加したり、リンクしたりする必要があります。
+# Chrome Cache
+## Python module
+
+### Usage
+import `chrome_cache.pyd`
+```python
+from chrome_cache import ChromeCache
+cc = ChromeCache("<chrome_cache_dir>", "<temp_dir>")
+#keys
+print(cc.keys()[:10])
+#find and save
+cc.find_save("<key>","<path>")
+
+#find
+entry = cc.find("<key>")
+entry.save("<path>")
+header = entry.get_header()
+```
+
+### Build
+```sh
+mkdir cmake_bin
+cd cmake_bin
+cmake -G "Visual Studio 15 2017 Win64" ..
+cmake --build . --target chrome_cache_pyd_debug_static
+```
 ```
 include:
-    pybind11/pybind11.h
+    pybind11/pybind11.h (https://github.com/pybind/pybind11)
     pybind11/stl.h
+    gzip/decompress.hpp (https://github.com/mapbox/gzip-hpp)
+    zlib.h
 
 link:
     zlibd.lib
     python37.lib
 ```
 
-### 使い方
-ビルドして出てきた```chrome_cache.pyd```をインポートします。
-```python
-from chrome_cache import ChromeCache
-
-cc = ChromeCache("<chrome_cache_dir>", "<temp_dir>")
-
-# ヘッダーとかも見るとき
-entry = cc.find("<key(url)>")
-
-print(entry.get_header().headers["content-type"])
-
-entry.save("<output_path>")
-
-# 保存するだけ
-cc.find_save("<key(url)>","<output_path>")
-```
-```<chrome_cache_dir>```はChromeのキャッシュフォルダです。通常のキャッシュフォルダは```\AppData\Local\Google\Chrome\User Data\<user>\```です。 ```<user>``` は ```Default``` や ```Profile n``` の場合があります。  
-```<temp_dir>```はファイルオープンの競合を避けるために使用するコピー先の作業用ディレクトリです。  
-```<key(url)>``` は検索対象のURL、 ```<output_path>``` は保存先のパスです。※カレントディレクトリに保存する場合は接頭辞として ```./``` をつける必要があります。
-
-## node.jsモジュールとしての使用
-### ビルド
-```sh
-> node-gyp configure --python <python2 executable>  
-> node-gyp build
-```
-### 使い方
+## Node.js module
+### Usage
+import `chrome_cache.node`
 ```js
 var chrome_cache = require('chrome_cache');
 var cc = new chrome_cache.ChromeCache('<chrome_cache_dir>','<temp_dir>');
 //keys
 console.log(cc.keys().slice(0, 10));
-//save
+//find and save
 cc.find_save('<key>','<path>');
+
+//find
+var entry = cc.find('<key>');
+entry.save('<path>');
+var header = entry.get_header();
 ```
 
-## コンソールアプリとしての使用
-### ビルド
-static_debug構成でビルドします。
-以下のライブラリを適宜インクルードディレクトリに追加したり、リンクしたりする必要があります。
+### Build
+```sh
+node-gyp configure --python <python2 executable path>
+node-gyp build
+```
 ```
 include:
-    boost/algorithm/string/trim.hpp
-    boost/algorithm/string/split.hpp
-    boost/iostreams/filtering_stream.hpp
-    boost/iostreams/filter/gzip.hpp
-    boost/iostreams/copy.hpp
+    gzip/decompress.hpp (https://github.com/mapbox/gzip-hpp)
+    zlib.h
+
+link:
+    zlib.lib
+```
+
+## Console Application
+### Usage
+##### Launch with options
+|          |                 |
+| -------- | --------------- |
+| `-c` | Cache directory       |
+| `-k` | URL             |
+| `-p` | Output path            |
+| `-u` | Reload index |
+##### Launch without options
+You can use in interactive. When you enter `key`, you can use sub command: `list` to list all keys and `reload` to reload index.  
+### Build
+```sh
+mkdir cmake_bin
+cd cmake_bin
+cmake -G "Visual Studio 15 2017 Win64" ..
+cmake --build . --target chrome_cache_exe_debug_static
+```
+```
+include:
     boost/program_options.hpp
+    gzip/decompress.hpp (https://github.com/mapbox/gzip-hpp)
+    zlib.h
 
 link:
     zlibd.lib
 ```
 
-### 使い方
-##### オプション付きで起動する場合
-|          |                 |
-| -------- | --------------- |
-| ```-c``` | キャッシュフォルダ       |
-| ```-k``` | URL             |
-| ```-p``` | 出力パス            |
-| ```-u``` | インデックスをリロードする |
-##### オプションなしで起動する場合
-インタラクティブに使用できます。
-```key``` 入力時に ```list``` を使用してURL一覧を表示できます。また、```reload``` を使用してインデックスをリロードします。
 
-# firefox_cache
-付属のバイナリはすべてC++ランタイムライブラリを含むx64版です。
-## pythonモジュールとしての使用
-### ビルド
-以下のライブラリを適宜インクルードディレクトリに追加したり、リンクしたりする必要があります。
+<hr>
+
+# Firefox Cache
+## Python module
+### Build
 ```
 include:
-    boost/algorithm/string/trim.hpp
-    boost/algorithm/string/split.hpp
     pybind11/pybind11.h
     pybind11/stl.h
 
 link:
-    python36.lib
+    python37.lib
 ```
 
-### 使い方
-ビルドして出てきた```firefox_cache.pyd```をインポートします。
+### Usage
+import `firefox_cache.pyd`
 ```python
 from firefox_cache import FirefoxCache
+cc = FirefoxCache("<firefox_cache_dir>", "<temp_dir>")
+#keys
+print(cc.keys()[:10])
+#find and save
+cc.find_save("<key>","<path>")
 
-cc = FirefoxCache("<firefox_cache_dir>")
-
-# ヘッダーとかも見るとき
-entry = cc.find("<key(url)>")
-
-print(entry.get_header().headers["content-type"])
-
-entry.save("<output_path>")
-
-# 保存するだけ
-cc.find_save("<key(url)>","<output_path>")
+#find
+entry = cc.find("<key>")
+entry.save("<path>")
+header = entry.get_header()
 ```
-```<firefox_cache_dir>```はFirefoxのキャッシュフォルダです。通常のキャッシュフォルダは```\AppData\Local\Mozilla\Firefox\Profiles\<user>\cache2\```です。 ```<user>``` は環境に依ります。  
-```<key(url)>``` は検索対象のURL、 ```<output_path>``` は保存先のパスです。
-
-※コンソールアプリとしての使用はサポートしていません。

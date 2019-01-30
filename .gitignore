@@ -12,3 +12,4 @@ static_link/
 chrome_cache/bin
 chrome_cache/build/
 firefox_cache/bin
+*bin/

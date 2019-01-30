@@ -145,7 +145,7 @@ public:
 	int count();
 	char* get_data(const ChromeCacheAddress&, int);
 private:
-	stringstream & decompress_gzip(char*, int);
+	//const string & decompress_gzip(char*, int);
 	void save_as_file(const string&, const ChromeCacheAddress&, int, bool);
 	void save_separated_file(const experimental::filesystem::path&, const ChromeCacheAddress&);
 	experimental::filesystem::path cache_dir;
