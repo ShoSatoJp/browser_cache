@@ -66,9 +66,14 @@ function findChromeCacheDir() {
         // Launch the browser.
         const app = await carlo.launch();
 
+        function exit() {
+            fsJSON(size_cache_json, size_cache);
+            app.exit();
+            process.exit();
+        }
+
         // Terminate Node.js process on app window closing.
-        app.on('exit', () => process.exit());
-        app.on('close', () => process.exit());
+        app.on('exit', exit);
         // Tell carlo where your web files are located.
         app.serveFolder('.');
 
@@ -78,11 +83,7 @@ function findChromeCacheDir() {
         await app.exposeFunction('find_save', find_save);
         await app.exposeFunction('fsJSON', fsJSON);
         await app.exposeFunction('findChromeCacheDir', findChromeCacheDir);
-        await app.exposeFunction('exit', () => {
-            fsJSON(size_cache_json, size_cache);
-            app.exit();
-            process.exit();
-        });
+        await app.exposeFunction('exit', exit);
 
         // Navigate to the main page of your app.
         await app.load('index.html');
