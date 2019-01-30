@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <title>Chrome Cache GUI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="./css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <script src="./js/main.js"></script>
+    <script>
+        function onLoadImageButtonClicked(){
+            listImages(images_index,LOAD_COUNT,document.querySelector('#cache-dir').value,{
+                height:parseInt(document.querySelector('#height').value||'0'),
+                width:parseInt(document.querySelector('#width').value||'0'),
+                query:document.querySelector('#query').value
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <button class="btn btn-secondary" style="position: fixed;top:10px;right:10px" onclick="exit_app();">Close</button>
+        <h1>Chrome Cache GUI</h1>
+        <div class="input-group" style="margin-top:10px;">
+            <input type="text" id="cache-dir" class="form-control" placeholder="Chrome Cache Directory" value="">
+        </div>
+        <div class="input-group" style="margin-top:10px;">
+            <input type="text" id="outputdir" class="form-control" placeholder="Output Directory" value="">
+        </div>
+        <div class="input-group" style="margin-top:10px;">
+            <input type="text" id="query" class="form-control" placeholder="Search URL" value="">
+        </div>
+        <div class="input-group" style="margin-top:10px;">
+            <input type="text" id="height" class="form-control" placeholder="Height" value="">
+            <input type="text" id="width" class="form-control" placeholder="Width" value="">
+        </div>
+        <button class="btn btn-success btn-block" style="margin-top: 10px" onclick="onLoadImageButtonClicked();">Search
+            Images</button>
+    </div>
+
+    <div id="containera">
+        <!-- <div class="item">
+            <div class="item-img">
+                <img class="" src="./images/IMG_0049.JPG" height="200px" width="auto" style="object-fit: contain;">
+            </div>
+            <div class="img-size"></div>
+        </div> -->
+    </div>
+    <div id="notification" class="alert alert-success notification-item"></div>
+    <p style="margin:10px;">Copyright © 2019 Sho Sato. All Rights Reserved. <a href="mailto:shosatojp2001@gmail.com">shosatojp2001@gmail.com</a></p>
+    <template id="image-item-template">
+        <div class="item">
+            <div class="item-img">
+                <img class="" src="" height="200px" width="auto" style="object-fit: contain;">
+            </div>
+            <div class="img-size"></div>
+        </div>
+    </template>
+    <script>
+        const notification = document.querySelector('#notification');
+        var currentNotification;
+
+        function openNotification(msg) {
+            if (currentNotification) {
+                clearTimeout(currentNotification);
+                closeNotification();
+            }
+            notification.textContent = msg;
+            notification.style.display = 'block';
+            currentNotification = setTimeout(closeNotification, 1000);
+        }
+
+        function closeNotification() {
+            notification.style.display = 'none';
+        }
+        
+        var ScrollEventFlag = false;
+        document.body.onscroll = async function () {
+            if ((window.scrollY + window.innerHeight + 300 > document.body.scrollHeight) && !ScrollEventFlag) {
+                ScrollEventFlag = true;
+                await listImages(images_index, LOAD_COUNT);
+                ScrollEventFlag = false;
+            }
+        }
+
+        loadForm();
+        (async function () {
+            const cache_dir = document.querySelector('#cache-dir');
+            if (!cache_dir.value) 
+                cache_dir.value = (await findChromeCacheDir()) || '';
+            
+        })();
+    </script>
+</body>
+
+</html>
