@@ -12,6 +12,7 @@ browser_cache_gui/
 *Release/
 *temp*/
 *bin/
+x64/
 
 #file extensions
 *.gif
