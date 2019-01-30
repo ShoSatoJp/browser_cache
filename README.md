@@ -11,7 +11,6 @@
 
 # Chrome Cache
 ## Python module
-
 ### Usage
 import `chrome_cache.pyd`
 ```python
@@ -76,6 +75,12 @@ include:
 
 link:
     zlib.lib
+```
+
+## GUI Application
+### Build
+```sh
+pkg .\main.js -t node10-win-x64 -o chrome_cache_gui.exe
 ```
 
 ## Console Application
