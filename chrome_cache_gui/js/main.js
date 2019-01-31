@@ -26,7 +26,10 @@ String.prototype.hashCode = function () {
 async function saveForm() {
     const data = [];
     document.querySelectorAll('input').forEach(e => {
-        data.push(e.value);
+        data.push({
+            value: e.value,
+            checked: e.checked
+        });
     });
     await fsJSON('form.json', {
         data
@@ -35,9 +38,13 @@ async function saveForm() {
 
 async function loadForm() {
     const data = (await fsJSON('form.json')).data;
-    document.querySelectorAll('input').forEach((e, i) => {
-        e.value = data[i];
-    });
+    const inputs = document.querySelectorAll('input');
+    if (inputs.length === data.length) {
+        inputs.forEach((e, i) => {
+            e.value = data[i].value || '';
+            e.checked = data[i].checked;
+        });
+    }
 }
 
 let images;
@@ -45,11 +52,15 @@ let images_length;
 let images_index = 0;
 let SEARCH_OPTIONS;
 let LOAD_COUNT = 50;
-
+let LAST_ALIGNED_ITEM_INDEX = -1;
+const and = (a, b) => a && b;
+const or = (a, b) => a || b;
 async function listImages(start, count, dir, search_options = {
     height: 0,
     width: 0,
-    query: null
+    query: null,
+    use_regex: false,
+    operator: 'and',
 }) {
     saveForm();
     const parent = document.querySelector('#containera');
@@ -58,44 +69,93 @@ async function listImages(start, count, dir, search_options = {
         SEARCH_OPTIONS = search_options;
         images = (await reload_cache(dir));
         if (SEARCH_OPTIONS.query.length) {
-            images = images.filter(e => (new RegExp(SEARCH_OPTIONS.query)).test(e));
+            images = images.filter(e => SEARCH_OPTIONS.use_regex ? (new RegExp(SEARCH_OPTIONS.query)).test(e) : ~e.indexOf(SEARCH_OPTIONS.query));
         }
         images_length = images.length;
         images_index = 0;
+        LAST_ALIGNED_ITEM_INDEX = -1;
     }
-    console.log(SEARCH_OPTIONS);
-    // const do_size = SEARCH_OPTIONS.height || SEARCH_OPTIONS.width;
-
     for (let i = 0; i < count && images_index < images_length; images_index++) {
         const key = images[images_index];
         const id = key.hashCode(); //generateId(10);
         const ext = getExt(key);
         const filename = id + '.' + ext;
+        const operator = SEARCH_OPTIONS.operator === 'and' ? and : or;
         try {
             var size;
             if ((new URL(key).hostname !== 'localhost') && ((size = await find_save(key, filename, './tempimg')) &&
-                    size.height > SEARCH_OPTIONS.height && size.width > SEARCH_OPTIONS.width)) {
+                    operator(size.height > SEARCH_OPTIONS.height, size.width > SEARCH_OPTIONS.width))) {
                 const template = document.querySelector('#image-item-template');
                 const element = template.content.cloneNode(true);
                 const img = element.querySelector('img')
                 img.setAttribute('src', './tempimg/' + filename);
                 img.setAttribute('key', key);
-                img.addEventListener('click', async function () {
-                    const outdir = document.querySelector('#outputdir').value;
-                    if (!outdir) alert('please specify output directory!');
-                    const key = this.getAttribute('key');
-                    await find_save(key, getFilename(key), outdir);
-                    openNotification('Saved: ' + key);
+                img.setAttribute('data-height', size.height);
+                img.setAttribute('data-width', size.width);
+                img.addEventListener('click', async () => {
+                    await saveImage(img);
                 });
                 const imgsize = element.querySelector('.img-size');
                 imgsize.textContent = size.width + '×' + size.height;
                 parent.appendChild(element);
                 i++;
             }
-        } catch {
-            console.warn(key);
+        } catch (e) {
+            console.warn(key, e);
         }
     }
+    alignItems();
+}
+
+async function saveImage(e) {
+    const outdir = document.querySelector('#outputdir').value;
+    if (!outdir) return;
+    const random_name = document.querySelector('#random-name').checked;
+    const key = e.getAttribute('key');
+    await find_save(key, random_name ? generateId(10) + '.' + getExt(key) : getFilename(key), outdir);
+    openNotification(key);
+}
+
+async function saveAllImages() {
+    const imgs = document.querySelectorAll('#containera img');
+    for (let i = 0, len = imgs.length; i < len; i++) {
+        await saveImage(imgs[i]);
+    }
+}
+
+
+function alignItems(event) {
+    const margin_per_item = 10;
+    const img_height = 200;
+    const min_width = 250;
+    const container = document.querySelector('#containera');
+    const imgs = Array.from(container.querySelectorAll('img')).slice(LAST_ALIGNED_ITEM_INDEX + 1);
+    const container_width = container.clientWidth;
+    const last_aligned = LAST_ALIGNED_ITEM_INDEX;
+
+    let stack = [];
+    let sumwidth = 0;
+    imgs.forEach((img, i) => {
+        const original_width = parseInt(img.getAttribute('data-width'));
+        const original_height = parseInt(img.getAttribute('data-height'));
+        let img_width = img_height / original_height * original_width;
+        if (img_width < min_width) img_width = min_width;
+        console.log(img_width)
+        sumwidth += margin_per_item + img_width;
+        stack.push({
+            img,
+            img_width
+        });
+        if (sumwidth > container_width) {
+            const growth_per_item = (sumwidth - container_width) / stack.length;
+            stack.forEach(e => {
+                e.img.setAttribute('width', e.img_width - growth_per_item + 'px');
+            });
+            stack = [];
+            sumwidth = 0;
+            LAST_ALIGNED_ITEM_INDEX = last_aligned + i + 1;
+        }
+    });
 }
 
 function getExt(key) {

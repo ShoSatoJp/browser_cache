@@ -12,6 +12,11 @@
 .item{
     position: relative;
     margin: 5px;
+    background-color: #eee;
+}
+
+.item:hover{
+    box-shadow: 0 0 8px gray;
 }
 
 .img-size {
