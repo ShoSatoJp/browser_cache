@@ -1,6 +1,4 @@
-let liCreatingFlag;
-let list = [];
-let image_exts = ['jpeg', 'jpg', 'png', 'gif'];
+const image_exts = ['jpeg', 'jpg', 'png', 'gif'];
 
 async function reload_cache(dir) {
     return (await init_chrome_cache(dir))
@@ -147,9 +145,12 @@ function alignItems(event) {
             img_width
         });
         if (sumwidth > container_width) {
-            const growth_per_item = (sumwidth - container_width) / stack.length;
+            const sum_growth = sumwidth - container_width;
+            const sum = stack.map(e => e.img_width).reduce((a, b) => a + b);
             stack.forEach(e => {
-                e.img.setAttribute('width', e.img_width - growth_per_item + 'px');
+                //縮小方法の指定
+                // e.img.setAttribute('width', e.img_width - growth_per_item + 'px');
+                e.img.setAttribute('width', e.img_width - (e.img_width / sum) * sum_growth + 'px');
             });
             stack = [];
             sumwidth = 0;

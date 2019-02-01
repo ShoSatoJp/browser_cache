@@ -20,7 +20,7 @@ x64/
 *.pyd
 *.exe
 *.zip
-
+*.7z
 
 #chrome_cache_gui
 form.json

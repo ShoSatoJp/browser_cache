@@ -25,7 +25,7 @@
 </head>
 
 <body>
-    <button class="btn btn-secondary" style="position: fixed;top:10px;right:10px;z-index: 100;" onclick="exit_app();">Close</button>
+    <!-- <button class="btn btn-secondary" style="position: fixed;top:10px;right:10px;z-index: 100;" onclick="exit_app();">Close</button> -->
     <div id="search-box" class="container">
         <h1>Chrome Cache GUI</h1>
         <div class="input-group" style="margin-top:10px;">
@@ -68,30 +68,8 @@
             </div>
         </div>
     </div>
-    <!-- <style>
-        .item-wrap{
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 100;
-        }
-        .item-wrap:hover {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-    </style> -->
-    <div id="containera">
-        <!-- <div class="item">
-            <div class="item-img">
-                <img class="" src="./images/hinamatsuri_9.jpg" height="200px" width="auto" style="object-fit: contain;">
-            </div>
-            <div class="img-size"></div>
-        </div> -->
-    </div>
+    <div id="containera"></div>
     <div id="notification" class="alert alert-success notification-item"></div>
-    <div id="information" class=""></div>
     <div class="container">
         <p>Copyright © 2019 Sho Sato. All Rights Reserved. shosatojp2001@gmail.com</p>
     </div>
@@ -104,6 +82,7 @@
         </div>
     </template>
     <script>
+        //notification
         const notification = document.querySelector('#notification');
         var currentNotification;
 
@@ -121,6 +100,7 @@
             notification.style.display = 'none';
         }
 
+        //scroll bottom to reload
         var ScrollEventFlag = false;
         document.body.onscroll = async function () {
             if ((window.scrollY + window.innerHeight + 300 > document.body.scrollHeight) && !ScrollEventFlag) {
@@ -130,6 +110,7 @@
             }
         }
 
+        //load form values and fill chrome cache dir.
         loadForm();
         (async function () {
             const cache_dir = document.querySelector('#cache-dir');
@@ -137,10 +118,16 @@
                 cache_dir.value = (await findChromeCacheDir()) || '';
         })();
 
+        //realign items when window resizes.
         window.onresize = function () {
             LAST_ALIGNED_ITEM_INDEX = -1;
             alignItems();
         };
+
+        //onbeforeunloadにexportFunctionした関数を指定するとなぜかnodejsプロセスが終わってくれる。。。
+        //これがないとnodejsプロセスが残る。
+        window.onbeforeunload = exit;
+
     </script>
 </body>
 
