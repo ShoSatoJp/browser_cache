@@ -9,8 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="./css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <script src="./js/array.js"></script>
     <script src="./js/main.js"></script>
-    <script src="./js/image_info.js"></script>
     <script>
         function onLoadImageButtonClicked(){
             listImages(images_index,LOAD_COUNT,document.querySelector('#cache-dir').value,{
@@ -19,6 +19,7 @@
                 query:document.querySelector('#query').value,
                 use_regex:document.querySelector('#use-regex').checked,
                 operator:document.querySelector('#operator-and').checked?'and':'or',
+                aspect_ratio:parseInt(document.querySelector('#aspect_ratio').value||'0'),
             });
         }
     </script>
@@ -44,8 +45,9 @@
             </div>
         </div>
         <div class="input-group" style="margin-top:10px;">
-            <input type="text" id="height" class="form-control" placeholder="Height" value="">
-            <input type="text" id="width" class="form-control" placeholder="Width" value="">
+            <input type="number" id="height" class="form-control" placeholder="Height" value="">
+            <input type="number" id="width" class="form-control" placeholder="Width" value="">
+            <input type="number" id="aspect_ratio" class="form-control" placeholder="Aspect Ratio" value="" min="0">
         </div>
         <div class="input-group" style="margin-top:10px; ">
             <div class="custom-control custom-radio" style="margin-right: 10px;">
@@ -78,7 +80,10 @@
             <div class="item-img">
                 <img class="" src="" height="200px" width="auto" style="object-fit: contain;">
             </div>
-            <div class="img-size"></div>
+            <div class="img-size">
+                <span class="wh"></span>
+                <span class="size"></span>
+            </div>
         </div>
     </template>
     <script>
@@ -127,7 +132,6 @@
         //onbeforeunloadにexportFunctionした関数を指定するとなぜかnodejsプロセスが終わってくれる。。。
         //これがないとnodejsプロセスが残る。
         window.onbeforeunload = exit;
-
     </script>
 </body>
 

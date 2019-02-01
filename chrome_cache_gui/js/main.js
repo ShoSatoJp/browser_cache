@@ -59,6 +59,7 @@ async function listImages(start, count, dir, search_options = {
     query: null,
     use_regex: false,
     operator: 'and',
+    aspect_ratio: 5,
 }) {
     saveForm();
     const parent = document.querySelector('#containera');
@@ -73,6 +74,12 @@ async function listImages(start, count, dir, search_options = {
         images_index = 0;
         LAST_ALIGNED_ITEM_INDEX = -1;
     }
+    const inverse_aspect_ratio = 1 / SEARCH_OPTIONS.aspect_ratio;
+    const check_aspect_ratio = (w, h) => {
+        const ratio = w / h;
+        console.log(SEARCH_OPTIONS.aspect_ratio)
+        return SEARCH_OPTIONS.aspect_ratio === 0 ? true : (ratio <= SEARCH_OPTIONS.aspect_ratio && ratio >= inverse_aspect_ratio);
+    }
     for (let i = 0; i < count && images_index < images_length; images_index++) {
         const key = images[images_index];
         const id = key.hashCode(); //generateId(10);
@@ -82,19 +89,24 @@ async function listImages(start, count, dir, search_options = {
         try {
             var size;
             if ((new URL(key).hostname !== 'localhost') && ((size = await find_save(key, filename, './tempimg')) &&
-                    operator(size.height > SEARCH_OPTIONS.height, size.width > SEARCH_OPTIONS.width))) {
+                    operator(size.height > SEARCH_OPTIONS.height, size.width > SEARCH_OPTIONS.width) &&
+                    check_aspect_ratio(size.width, size.height))) {
+                const path = './tempimg/' + filename;
+                const stat_ = await stat(path);
                 const template = document.querySelector('#image-item-template');
                 const element = template.content.cloneNode(true);
-                const img = element.querySelector('img')
-                img.setAttribute('src', './tempimg/' + filename);
+                const img = element.querySelector('img');
+                img.setAttribute('src', path);
                 img.setAttribute('key', key);
                 img.setAttribute('data-height', size.height);
                 img.setAttribute('data-width', size.width);
                 img.addEventListener('click', async () => {
                     await saveImage(img);
                 });
-                const imgsize = element.querySelector('.img-size');
-                imgsize.textContent = size.width + '×' + size.height;
+                const img_wh = element.querySelector('.img-size>.wh');
+                img_wh.textContent = size.width + '×' + size.height;
+                const img_size = element.querySelector('.img-size>.size');
+                img_size.textContent = ' ' + bytes2bkmg(stat_.size);
                 parent.appendChild(element);
                 i++;
             }
@@ -146,12 +158,25 @@ function alignItems(event) {
         });
         if (sumwidth > container_width) {
             const sum_growth = sumwidth - container_width;
-            const sum = stack.map(e => e.img_width).reduce((a, b) => a + b);
+            let growth_rest = sum_growth;
+            const sum = stack.map(e => e.img_width ^ 2).reduce((a, b) => a + b);
             stack.forEach(e => {
                 //縮小方法の指定
                 // e.img.setAttribute('width', e.img_width - growth_per_item + 'px');
-                e.img.setAttribute('width', e.img_width - (e.img_width / sum) * sum_growth + 'px');
+                e.img.setAttribute('width', e.img_width - ((e.img_width ^ 2) / sum) * sum_growth + 'px');
             });
+            //
+            // stack.orderBy(e => e.img_width).forEach((e, i) => {
+            //     var img_width;
+            //     if (e.img_width < 200) {
+            //         img_width = 200;
+            //     } else {
+            //         img_width = e.img_width - (growth_rest / (stack.length - i));
+            //         growth_rest -= growth_rest / (stack.length - i);
+            //     }
+            //     e.img.setAttribute('width', img_width + 'px');
+            // });
+            //
             stack = [];
             sumwidth = 0;
             LAST_ALIGNED_ITEM_INDEX = last_aligned + i + 1;
@@ -177,4 +202,14 @@ function generateId(length) {
     for (var i = 0; i < length; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
     return text;
+}
+
+function bytes2bkmg(bytes) {
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    for (const unit of units) {
+        if (bytes < 1024) {
+            return Math.floor(bytes) + unit;
+        }
+        bytes /= 1024;
+    }
 }

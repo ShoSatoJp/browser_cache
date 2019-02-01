@@ -84,7 +84,9 @@ function findChromeCacheDir() {
         await app.exposeFunction('fsJSON', fsJSON);
         await app.exposeFunction('findChromeCacheDir', findChromeCacheDir);
         await app.exposeFunction('exit', exit);
-
+        await app.exposeFunction('stat',(path)=>{
+            return fs.statSync(path);
+        });
         // Navigate to the main page of your app.
         await app.load('index.html');
     } catch (error) {
