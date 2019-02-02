@@ -20,6 +20,7 @@
                 use_regex:document.querySelector('#use-regex').checked,
                 operator:document.querySelector('#operator-and').checked?'and':'or',
                 aspect_ratio:parseInt(document.querySelector('#aspect_ratio').value||'0'),
+                item_height:document.querySelector('#item-height').value,
             });
         }
     </script>
@@ -32,9 +33,22 @@
         <div class="input-group" style="margin-top:10px;">
             <input type="text" id="cache-dir" class="form-control" placeholder="Chrome Cache Directory" value="">
         </div>
+        <!-- <div class="form-group row" style="margin-top:10px;">
+            <label for="cache-dir" class="col-sm-4 col-form-label">Chrome Cache Directory</label>
+            <div class="col-sm-8">
+                <input type="text" id="cache-dir" class="form-control" placeholder="Chrome Cache Directory" value="">
+            </div>
+        </div> -->
         <div class="input-group" style="margin-top:10px;">
-            <input type="text" id="outputdir" class="form-control" placeholder="Output Directory" value="">
+            <input type="text" id="outputdir" name="outputdir" class="form-control" placeholder="Output Directory"
+                value="">
         </div>
+        <!-- <div class="form-group row" style="margin-top:10px;">
+            <label for="outputdir" class="col-sm-4 col-form-label">Output Directory</label>
+            <div class="col-sm-8">
+                <input type="text" id="outputdir" name="outputdir" class="form-control" placeholder="Output Directory"            value="">
+            </div>
+        </div> -->
         <div class="input-group" style="margin-top:10px;">
             <input type="text" id="query" class="form-control" placeholder="Search URL" value="">
         </div>
@@ -65,15 +79,45 @@
         </div>
         <div class="input-group" style="margin-top:10px;">
             <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="random-name">
+                <input type="checkbox" class="custom-control-input" id="random-name" name="random-name">
                 <label class="custom-control-label" for="random-name">Random Name</label>
             </div>
         </div>
+        <div class="input-group" style="margin-top:10px;">
+            <input type="range" class="custom-range" min="100" max="500" id="item-height">
+            <script>
+                document.querySelector('#item-height').addEventListener('input',function(){
+                    ITEM_HEIGHT=this.value;
+                    LAST_ALIGNED_ITEM_INDEX=-1;
+                    document.querySelectorAll('img').forEach(e=>e.setAttribute('height',ITEM_HEIGHT+'px'));
+                    alignItems(null);
+                });
+            </script>
+        </div>
+    </div>
+    <style>
+        @media screen and (max-width: 800px){
+            .hide-mobile{
+                display: none;
+            }
+        }
+    </style>
+    <div id="fixed-top" class="">
+        <h3 class="hide-mobile" style="flex-grow: 1;">Chrome Cache GUI</h3>
+        <input type="text" style="max-width: 30%;flex-grow: 2;" class="form-control" placeholder="Output Directory"
+            value="" name="outputdir">
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="random-name-top" name="random-name">
+            <label class="custom-control-label" for="random-name-top">Random Name</label>
+        </div>
+        <button class="btn btn-outline-info" onclick="saveAllImages();">Save All</button>
+        <button class="btn btn-info" onclick="window.scrollTo(0, 0);">Top</button>
     </div>
     <div id="containera"></div>
     <div id="notification" class="alert alert-success notification-item"></div>
     <div class="container">
-        <p>Copyright © 2019 Sho Sato. All Rights Reserved. shosatojp2001@gmail.com</p>
+        <p style="display:inline-block;">Copyright © 2019 Sho Sato. All Rights Reserved. shosatojp2001@gmail.com</p>
+        <a href="" onclick="window.onbeforeunload=null;location.reload();">Reload</a>
     </div>
     <template id="image-item-template">
         <div class="item">
@@ -87,6 +131,30 @@
         </div>
     </template>
     <script>
+        //sync checkbox
+        (() => {
+            const processed = [];
+            const names = Array.from(document.querySelectorAll(`input:not([type=radio])`)).map(e => e.getAttribute(
+                'name')).filter(
+                e => e);
+            names.forEach(name => {
+                if (!~processed.indexOf(name)) {
+                    const inputs = document.querySelectorAll(`input:not([type=radio])[name=${name}]`);
+                    inputs.forEach(e => {
+                        e.oninput = function (event) {
+                            inputs.forEach(x => {
+                                if (x !== e) {
+                                    x.checked = event.target.checked;
+                                    x.value = event.target.value;
+                                }
+                            });
+                        }
+                    });
+                    processed.push(name);
+                }
+            });
+        })();
+
         //notification
         const notification = document.querySelector('#notification');
         var currentNotification;
@@ -108,12 +176,23 @@
         //scroll bottom to reload
         var ScrollEventFlag = false;
         document.body.onscroll = async function () {
+            // console.log(window.scrollY, window.innerHeight, document.body.scrollHeight);
             if ((window.scrollY + window.innerHeight + 300 > document.body.scrollHeight) && !ScrollEventFlag) {
                 ScrollEventFlag = true;
                 await listImages(images_index, LOAD_COUNT);
                 ScrollEventFlag = false;
             }
+            //fixed-top
+            if (window.scrollY > SearchBoxHeight) {
+                document.querySelector('#fixed-top').classList.add('top');
+            } else {
+                document.querySelector('#fixed-top').classList.remove('top');
+            }
+
         }
+
+        var SearchBoxHeight = parseInt(window.getComputedStyle(document.querySelector('#search-box')).height);
+        // window.onscroll = function () {}
 
         //load form values and fill chrome cache dir.
         loadForm();
@@ -121,17 +200,24 @@
             const cache_dir = document.querySelector('#cache-dir');
             if (!cache_dir.value)
                 cache_dir.value = (await findChromeCacheDir()) || '';
+            ITEM_HEIGHT = document.querySelector('#item-height').value;
+            console.log(document.querySelector('#item-height').value);
         })();
 
         //realign items when window resizes.
         window.onresize = function () {
             LAST_ALIGNED_ITEM_INDEX = -1;
             alignItems();
+
+            SearchBoxHeight = parseInt(window.getComputedStyle(document.querySelector('#search-box')).height);
         };
 
         //onbeforeunloadにexportFunctionした関数を指定するとなぜかnodejsプロセスが終わってくれる。。。
         //これがないとnodejsプロセスが残る。
-        window.onbeforeunload = exit;
+        window.onbeforeunload =async ()=>{
+            saveForm();
+            await exit();
+        } 
     </script>
 </body>
 

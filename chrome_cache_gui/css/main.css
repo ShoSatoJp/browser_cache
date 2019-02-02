@@ -37,3 +37,26 @@
     word-wrap: break-word;
     display: none;
 }
+
+#fixed-top {
+    display: flex;
+    position: fixed;
+    background-color: white;
+    top: 0;
+    height: 50px;
+    width: 100%;
+    transform: translate(0, -50px);
+    transition-duration: 200ms;
+    z-index: 100;
+    align-items: center;
+    justify-content: flex-end;
+}
+#fixed-top>*{
+    margin: 5px;
+}
+
+#fixed-top.top {
+    transform: translate(0, 0);
+    box-shadow: 0 0px 8px gray;
+
+}

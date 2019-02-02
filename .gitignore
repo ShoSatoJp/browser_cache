@@ -13,6 +13,7 @@ browser_cache_gui/
 *temp*/
 *bin/
 x64/
+*test/
 
 #file extensions
 *.gif

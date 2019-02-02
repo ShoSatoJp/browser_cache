@@ -51,6 +51,7 @@ let images_index = 0;
 let SEARCH_OPTIONS;
 let LOAD_COUNT = 50;
 let LAST_ALIGNED_ITEM_INDEX = -1;
+let ITEM_HEIGHT = 200;
 const and = (a, b) => a && b;
 const or = (a, b) => a || b;
 async function listImages(start, count, dir, search_options = {
@@ -60,6 +61,7 @@ async function listImages(start, count, dir, search_options = {
     use_regex: false,
     operator: 'and',
     aspect_ratio: 5,
+    item_height:200,
 }) {
     saveForm();
     const parent = document.querySelector('#containera');
@@ -74,6 +76,7 @@ async function listImages(start, count, dir, search_options = {
         images_index = 0;
         LAST_ALIGNED_ITEM_INDEX = -1;
     }
+    console.log(SEARCH_OPTIONS)
     const inverse_aspect_ratio = 1 / SEARCH_OPTIONS.aspect_ratio;
     const check_aspect_ratio = (w, h) => {
         const ratio = w / h;
@@ -98,6 +101,7 @@ async function listImages(start, count, dir, search_options = {
                 const img = element.querySelector('img');
                 img.setAttribute('src', path);
                 img.setAttribute('key', key);
+                img.setAttribute('height', ITEM_HEIGHT);
                 img.setAttribute('data-height', size.height);
                 img.setAttribute('data-width', size.width);
                 img.addEventListener('click', async () => {
@@ -136,8 +140,8 @@ async function saveAllImages() {
 
 function alignItems(event) {
     const margin_per_item = 10;
-    const img_height = 200;
-    const min_width = 250;
+    const img_height = ITEM_HEIGHT;
+    const min_width = img_height * 1.25;
     const container = document.querySelector('#containera');
     const imgs = Array.from(container.querySelectorAll('img')).slice(LAST_ALIGNED_ITEM_INDEX + 1);
     const container_width = container.clientWidth;
@@ -150,7 +154,6 @@ function alignItems(event) {
         const original_height = parseInt(img.getAttribute('data-height'));
         let img_width = img_height / original_height * original_width;
         if (img_width < min_width) img_width = min_width;
-        console.log(img_width)
         sumwidth += margin_per_item + img_width;
         stack.push({
             img,
