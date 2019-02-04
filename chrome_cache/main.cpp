@@ -44,14 +44,15 @@ int main(int argc, char*argv[]) {
 		return 0;
 	} else {
 		//interactive
-		string cache_dir;// = R"(C:\Users\User\AppData\Local\Google\Chrome\User Data\Profile 3\Cache)";
-		cout << "cache_dir=" << flush;
-		getline(cin, cache_dir);
-		ChromeCache cc;
+		string cache_dir = R"(C:\Users\User\AppData\Local\Google\Chrome\User Data\Profile 3\Cache)";
+		//cout << "cache_dir=" << flush;
+		//getline(cin, cache_dir);
+		ChromeCache *cc = nullptr; http://1.bp.blogspot.com/-nD3cR0nPDJ4/UTADal0mVUI/AAAAAAAAAnQ/ehlEC_4UG6Q/s000/18.gif
 	RELOAD:
+		if (cc)delete cc;
 		try {
-			cc = ChromeCache(cache_dir, dest);
-			cout << cc.count() << endl;
+			cc = new ChromeCache(cache_dir, dest);
+			cout << cc->count() << endl;
 		} catch (const std::exception& ex) {
 			cout << ex.what() << endl;
 			return 0;
@@ -91,21 +92,26 @@ int main(int argc, char*argv[]) {
 			cout << "key=" << flush;
 			getline(cin, key);
 			if (key == "list") {
-				cc.show_keys();
+				cc->show_keys();
 				continue;
 			} else if (key == "reload") {
-				cc.close();
+				//cc->close();
 				goto RELOAD;
 			}
 			cout << "path=" << flush;
 			getline(cin, path);
-			try {
-				cc.find_save(key, path);
-			} catch (const std::exception& e) {
-				cout << e.what() << endl;
-			}
+			//auto map = cc.find(key).get_header()->headers;
+			//for (auto itr = map.begin(); itr != map.end(); ++itr) {
+			//	cout << setw(20) << right << itr->first << " : " << left << itr->second << '\n';
+			//}
+			cout << cc->find(key).get_header()->to_string() << endl;
+			//try {
+			//cc.find_save(key, path);
+			//} catch (const std::exception& e) {
+			//	cout << e.what() << endl;
+			//}
 		}
-		cc.close();
+		cc->close();
 		return 0;
 	}
 }

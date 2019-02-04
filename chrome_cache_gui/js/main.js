@@ -61,8 +61,9 @@ async function listImages(start, count, dir, search_options = {
     use_regex: false,
     operator: 'and',
     aspect_ratio: 5,
-    item_height:200,
+    item_height: 200,
 }) {
+
     saveForm();
     const parent = document.querySelector('#containera');
     if (dir || !images) {
@@ -85,7 +86,7 @@ async function listImages(start, count, dir, search_options = {
     }
     for (let i = 0; i < count && images_index < images_length; images_index++) {
         const key = images[images_index];
-        const id = key.hashCode(); //generateId(10);
+        const id = key.hashCode();
         const ext = getExt(key);
         const filename = id + '.' + ext;
         const operator = SEARCH_OPTIONS.operator === 'and' ? and : or;
@@ -99,6 +100,7 @@ async function listImages(start, count, dir, search_options = {
                 const template = document.querySelector('#image-item-template');
                 const element = template.content.cloneNode(true);
                 const img = element.querySelector('img');
+                const size_ = size;
                 img.setAttribute('src', path);
                 img.setAttribute('key', key);
                 img.setAttribute('height', ITEM_HEIGHT);
@@ -106,6 +108,14 @@ async function listImages(start, count, dir, search_options = {
                 img.setAttribute('data-width', size.width);
                 img.addEventListener('click', async () => {
                     await saveImage(img);
+                });
+                img.addEventListener('contextmenu', async function (e) {
+                    information.style.display = 'block';
+                    information.querySelector('img').setAttribute('src', path);
+                    information.querySelector('#information-key').textContent = key;
+                    information.querySelector('#information-size').textContent = size_.width + '×' + size_.height + ' ' + bytes2bkmg(stat_.size);
+                    information.querySelector('#information-download').setAttribute('key',key);
+                    showHeader(await get_header(key), information);
                 });
                 const img_wh = element.querySelector('.img-size>.wh');
                 img_wh.textContent = size.width + '×' + size.height;
@@ -119,6 +129,7 @@ async function listImages(start, count, dir, search_options = {
         }
     }
     alignItems();
+
 }
 
 async function saveImage(e) {
@@ -144,7 +155,8 @@ function alignItems(event) {
     const min_width = img_height * 1.25;
     const container = document.querySelector('#containera');
     const imgs = Array.from(container.querySelectorAll('img')).slice(LAST_ALIGNED_ITEM_INDEX + 1);
-    const container_width = container.clientWidth;
+    const container_width = parseInt(window.getComputedStyle(container).width);
+    console.log(container_width)
     const last_aligned = LAST_ALIGNED_ITEM_INDEX;
 
     let stack = [];
@@ -165,21 +177,8 @@ function alignItems(event) {
             const sum = stack.map(e => e.img_width ^ 2).reduce((a, b) => a + b);
             stack.forEach(e => {
                 //縮小方法の指定
-                // e.img.setAttribute('width', e.img_width - growth_per_item + 'px');
                 e.img.setAttribute('width', e.img_width - ((e.img_width ^ 2) / sum) * sum_growth + 'px');
             });
-            //
-            // stack.orderBy(e => e.img_width).forEach((e, i) => {
-            //     var img_width;
-            //     if (e.img_width < 200) {
-            //         img_width = 200;
-            //     } else {
-            //         img_width = e.img_width - (growth_rest / (stack.length - i));
-            //         growth_rest -= growth_rest / (stack.length - i);
-            //     }
-            //     e.img.setAttribute('width', img_width + 'px');
-            // });
-            //
             stack = [];
             sumwidth = 0;
             LAST_ALIGNED_ITEM_INDEX = last_aligned + i + 1;
@@ -214,5 +213,24 @@ function bytes2bkmg(bytes) {
             return Math.floor(bytes) + unit;
         }
         bytes /= 1024;
+    }
+}
+
+function showHeader(header, target) {
+    const h3 = target.querySelector('#information-header-status');
+    h3.textContent = header.status_source;
+    const table = target.querySelector('table');
+    while (table.firstChild) table.removeChild(table.firstChild);
+    for (const key in header.headers) {
+        if (header.headers.hasOwnProperty(key)) {
+            const tr = document.createElement('tr');
+            const td1 = document.createElement('td');
+            td1.textContent = key;
+            const td2 = document.createElement('td');
+            td2.textContent = header.headers[key];
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            table.appendChild(tr);
+        }
     }
 }

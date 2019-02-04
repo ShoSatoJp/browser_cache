@@ -1,3 +1,5 @@
+body {}
+
 #containera {
     display: flex;
     flex-wrap: wrap;
@@ -9,13 +11,13 @@
     cursor: pointer;
 }
 
-.item{
+.item {
     position: relative;
     margin: 5px;
     background-color: #eee;
 }
 
-.item:hover{
+.item:hover {
     box-shadow: 0 0 8px gray;
 }
 
@@ -30,7 +32,7 @@
 
 .notification-item {
     position: fixed;
-    bottom: 10px;
+    bottom: 60px;
     margin: 0;
     left: 10px;
     width: 30%;
@@ -38,25 +40,129 @@
     display: none;
 }
 
-#fixed-top {
+.fixed-bar {
     display: flex;
     position: fixed;
     background-color: white;
-    top: 0;
     height: 50px;
     width: 100%;
-    transform: translate(0, -50px);
     transition-duration: 200ms;
     z-index: 100;
     align-items: center;
     justify-content: flex-end;
 }
-#fixed-top>*{
-    margin: 5px;
+
+#fixed-top {
+    top: 0;
+    transform: translate(0, -50px);
 }
 
-#fixed-top.top {
+#fixed-bottom {
+    bottom: 0;
+    transform: translate(0, 50px);
+}
+
+#fixed-bottom.show,
+#fixed-top.show {
     transform: translate(0, 0);
     box-shadow: 0 0px 8px gray;
 
+}
+
+.fixed-bar>* {
+    margin: 5px;
+}
+
+
+@media screen and (max-width: 800px) {
+    .hide-mobile {
+        display: none;
+    }
+}
+
+
+#main {
+    /* grid-template-columns: auto 30%; */
+    /* display: grid; */
+}
+
+#left-box {
+    height: 100vh;
+    overflow-y: auto;
+    width: 100%;
+    /* position: relative; */
+}
+
+#right-box {
+    display: flex;
+    height: 100vh;
+    box-shadow: 0 0 8px gray;
+    z-index: 90;
+    overflow-y: auto;
+
+}
+
+#right-box-info {
+    padding: 10px;
+    word-break: break-word;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    overflow-y: auto;
+}
+
+#right-box-img {
+    object-fit: contain;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#right-box-buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+.right-box-button {
+    cursor: pointer;
+    text-align: center;
+    width: 50px;
+    transition-duration: 200ms
+}
+
+.right-box-button:hover {
+    box-shadow: 0 0 4px gray;
+    z-index: 95;
+}
+
+#information {
+    box-shadow: 0 0 4px gray;
+    display: none;
+    max-height: calc(100vh - 120px);
+    background-color: white;
+    position: fixed;
+    bottom: 60px;
+    right: 10px;
+    width: 30%;
+    z-index: 50;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    overflow-y: auto;
+    word-break: break-all;
+}
+#information-img{
+    width: 100%;
+    height: 30vh;
+    object-fit: contain;
+    background-color: #eee;
+}
+#close-information{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    text-align: center;
+}
+#close-information:hover{
+    background-color: rgba(0, 0, 0, 0.1);
 }

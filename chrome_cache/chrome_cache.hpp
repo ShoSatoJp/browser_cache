@@ -53,9 +53,10 @@ public:
 	string status_source;
 	string protocol;
 	map<string, string> headers;
-	const string& to_string();
+	const string to_string();
 	bool is_gzipped();
 	static unique_ptr<HttpHeader> load_http_header(char*, int);
+	static HttpHeader* load_http_header_ptr(char*, int);
 };
 
 class ChromeCacheAddress {
@@ -86,6 +87,9 @@ class ChromeCache;
 class ChromeCacheEntry {
 public:
 	ChromeCacheEntry() {}
+	~ChromeCacheEntry() {
+		delete es;
+	}
 	ChromeCacheEntry(EntryStore*, const string&, ChromeCache *cc);
 	EntryStore *es;
 	string key;
@@ -93,6 +97,7 @@ public:
 	vector<ChromeCacheAddress> data_addrs;
 	int data_count;
 	unique_ptr<HttpHeader> get_header()const;
+	HttpHeader* get_header_ptr()const;
 	ChromeCache * cc = nullptr;
 	void save(const string &path);
 private:
@@ -132,6 +137,7 @@ public:
 	ChromeCache(const string &cache_dir, const string& temp_cache_dir, bool update_index = true)
 		:ChromeCache(experimental::filesystem::path(cache_dir), experimental::filesystem::path(temp_cache_dir), update_index) {}
 	ChromeCache(const experimental::filesystem::path& cache_dir, const experimental::filesystem::path &temp_cache_dir, bool update_index);
+	~ChromeCache();
 	void show_keys();
 	vector<string> keys();
 	unique_ptr<ChromeCacheEntry> get_entry(int i);

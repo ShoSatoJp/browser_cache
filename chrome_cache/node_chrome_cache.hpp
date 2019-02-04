@@ -17,6 +17,7 @@ private:
 	static NAN_METHOD(Keys);
 	static NAN_METHOD(FindSave);
 	static NAN_METHOD(Find);
+	static NAN_METHOD(GetHeader);
 
 	static Nan::Persistent<v8::Function> constructor;
 	ChromeCache *cc_;
@@ -32,6 +33,7 @@ NAN_MODULE_INIT(NChromeCache::Init) {
 	SetPrototypeMethod(tpl, "keys", Keys);
 	SetPrototypeMethod(tpl, "find_save", FindSave);
 	SetPrototypeMethod(tpl, "find", Find);
+	SetPrototypeMethod(tpl, "get_header", GetHeader);
 
 	constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
 	Nan::Set(target, Nan::New("ChromeCache").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
@@ -87,18 +89,47 @@ NAN_METHOD(NChromeCache::Find) {
 	NChromeCache* obj = Nan::ObjectWrap::Unwrap<NChromeCache>(info.Holder());
 	v8::Isolate* isolate = info.GetIsolate();
 	try {
-		ChromeCacheEntry *entry = obj->cc_->find_map_ptr(key);
-
 		v8::EscapableHandleScope scope(isolate);
 		v8::Handle<v8::Value> argv[] = { v8::Boolean::New(isolate,true) };
 		v8::Local<v8::Context> context = isolate->GetCurrentContext();
 		v8::Local<v8::Function> cons = v8::Local<v8::Function>::New(isolate, NChromeCacheEntry::constructor);
-		v8::Handle<v8::Object> obj = cons->NewInstance(context, 1, argv).ToLocalChecked();
+		v8::Handle<v8::Object> object = cons->NewInstance(context, 1, argv).ToLocalChecked();
 
-		NChromeCacheEntry* n = NChromeCacheEntry::Unwrap<NChromeCacheEntry>(obj);
-		n->entry_ = entry;
+		NChromeCacheEntry* n = NChromeCacheEntry::Unwrap<NChromeCacheEntry>(object);
+		n->entry_ = obj->cc_->find_map_ptr(key);
 
-		info.GetReturnValue().Set(scope.Escape(obj));
+		info.GetReturnValue().Set(scope.Escape(object));
+	} catch (const std::exception& e) {
+		isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, e.what())));
+	}
+}
+
+NAN_METHOD(NChromeCache::GetHeader) {
+	string key = info[0]->IsUndefined() ? "" : string(*v8::String::Utf8Value(info[0].As<v8::String>()));
+	NChromeCache* obj = Nan::ObjectWrap::Unwrap<NChromeCache>(info.Holder());
+	v8::Isolate* isolate = info.GetIsolate();
+	try {
+		//v8::EscapableHandleScope scope(isolate);
+
+		ChromeCacheEntry * entry= obj->cc_->find_map_ptr(key);
+		HttpHeader* header = entry->get_header_ptr();
+		v8::Local<v8::Context> context = isolate->GetCurrentContext();
+		v8::Local<v8::Object> object = v8::Object::New(isolate);
+		v8::Local<v8::Object> headers = v8::Object::New(isolate);
+		auto headers_ = header->headers;
+		//for (pair<string, string> p : header->headers) {
+		for (auto p = headers_.begin(); p != headers_.end(); ++p) {
+			headers->Set(context, v8::String::NewFromUtf8(isolate, p->first.c_str()), v8::String::NewFromUtf8(isolate, p->second.c_str()));
+		}
+		object->Set(context, v8::String::NewFromUtf8(isolate, "status_code"), Nan::New(header->status_code));
+		object->Set(context, v8::String::NewFromUtf8(isolate, "status_source"), v8::String::NewFromUtf8(isolate, header->status_source.c_str()));
+		object->Set(context, v8::String::NewFromUtf8(isolate, "protocol"), v8::String::NewFromUtf8(isolate, header->protocol.c_str()));
+		object->Set(context, v8::String::NewFromUtf8(isolate, "headers"), headers);
+		delete header;
+
+
+		//info.GetReturnValue().Set(scope.Escape(object));
+		info.GetReturnValue().Set(object);
 	} catch (const std::exception& e) {
 		isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, e.what())));
 	}

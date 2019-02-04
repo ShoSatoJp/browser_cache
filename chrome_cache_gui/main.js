@@ -13,10 +13,10 @@ function fsJSON(filename, object) {
         return fs.readJSONSync(filename);
     }
 }
-
-var cc;
 const size_cache_json = 'size_cache.json';
 let size_cache = fsJSON(size_cache_json);
+
+var cc;
 
 function init_chrome_cache(dir) {
     cc = new chrome_cache.ChromeCache(dir, 'temp');
@@ -26,6 +26,11 @@ function init_chrome_cache(dir) {
 function keys() {
     if (!cc) return;
     return cc.keys();
+}
+
+function get_header(key) {
+    if (!cc) return;
+    return cc.get_header(key);
 }
 
 function find_save(key, filename, outdir) {
@@ -81,11 +86,15 @@ function findChromeCacheDir() {
         await app.exposeFunction('init_chrome_cache', init_chrome_cache);
         await app.exposeFunction('keys', keys);
         await app.exposeFunction('find_save', find_save);
+        await app.exposeFunction('get_header', get_header);
         await app.exposeFunction('fsJSON', fsJSON);
         await app.exposeFunction('findChromeCacheDir', findChromeCacheDir);
         await app.exposeFunction('exit', exit);
-        await app.exposeFunction('stat',(path)=>{
+        await app.exposeFunction('stat', (path) => {
             return fs.statSync(path);
+        });
+        await app.exposeFunction('hoge', (e) => {
+            console.log(e);
         });
         // Navigate to the main page of your app.
         await app.load('index.html');

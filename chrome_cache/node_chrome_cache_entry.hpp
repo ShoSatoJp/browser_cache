@@ -6,12 +6,12 @@ class NChromeCacheEntry :public Nan::ObjectWrap {
 public:
 	static NAN_MODULE_INIT(Init);
 
-	explicit NChromeCacheEntry(ChromeCacheEntry *entry);
+	NChromeCacheEntry(ChromeCacheEntry *entry);
 	static Nan::Persistent<v8::Function> constructor;
 
 	ChromeCacheEntry *entry_;
-private:
 	~NChromeCacheEntry();
+private:
 	//node.js constructor
 	static NAN_METHOD(New) {};
 	//node.js prototype method
@@ -34,12 +34,12 @@ NAN_MODULE_INIT(NChromeCacheEntry::Init) {
 	Nan::Set(target, Nan::New("ChromeCacheEntry").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
 }
 
-NChromeCacheEntry::NChromeCacheEntry(ChromeCacheEntry *entry) :entry_(entry) {}
+NChromeCacheEntry::NChromeCacheEntry(ChromeCacheEntry* entry) :entry_(entry) {}
 NChromeCacheEntry::~NChromeCacheEntry() {}
 
 NAN_METHOD(NChromeCacheEntry::Save) {
 	string path = info[0]->IsUndefined() ? "" : string(*v8::String::Utf8Value(info[0].As<v8::String>()));
-	NChromeCacheEntry* obj = Nan::ObjectWrap::Unwrap<NChromeCacheEntry>(info.Holder());
+	NChromeCacheEntry*obj = Nan::ObjectWrap::Unwrap<NChromeCacheEntry>(info.Holder());
 	v8::Isolate* isolate = info.GetIsolate();
 	try {
 		obj->entry_->save(path);
@@ -49,21 +49,21 @@ NAN_METHOD(NChromeCacheEntry::Save) {
 }
 
 NAN_METHOD(NChromeCacheEntry::GetHeader) {
-	NChromeCacheEntry* obj = Nan::ObjectWrap::Unwrap<NChromeCacheEntry>(info.Holder());
-	unique_ptr<HttpHeader> header = obj->entry_->get_header();
 	v8::Isolate* isolate = info.GetIsolate();
+	NChromeCacheEntry* obj = Nan::ObjectWrap::Unwrap<NChromeCacheEntry>(info.Holder());
+	HttpHeader* header = obj->entry_->get_header_ptr();
 	v8::Local<v8::Context> context = isolate->GetCurrentContext();
 	v8::Local<v8::Object> object = v8::Object::New(isolate);
 	v8::Local<v8::Object> headers = v8::Object::New(isolate);
-	for (pair<string, string> p : header->headers) {
-		headers->Set(context, v8::String::NewFromUtf8(isolate, p.first.c_str()), v8::String::NewFromUtf8(isolate, p.second.c_str()));
+	auto headers_ = header->headers;
+	//for (pair<string, string> p : header->headers) {
+	for (auto p = headers_.begin(); p != headers_.end(); ++p) {
+		headers->Set(context, v8::String::NewFromUtf8(isolate, p->first.c_str()), v8::String::NewFromUtf8(isolate, p->second.c_str()));
 	}
 	object->Set(context, v8::String::NewFromUtf8(isolate, "status_code"), Nan::New(header->status_code));
 	object->Set(context, v8::String::NewFromUtf8(isolate, "status_source"), v8::String::NewFromUtf8(isolate, header->status_source.c_str()));
 	object->Set(context, v8::String::NewFromUtf8(isolate, "protocol"), v8::String::NewFromUtf8(isolate, header->protocol.c_str()));
 	object->Set(context, v8::String::NewFromUtf8(isolate, "headers"), headers);
-	
+	delete header;
 	info.GetReturnValue().Set(object);
-
 }
-
