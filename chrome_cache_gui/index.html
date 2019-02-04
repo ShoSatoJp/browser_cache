@@ -25,131 +25,110 @@
                 item_height:document.querySelector('#item-height').value,
             });
         }
+
     </script>
 </head>
 
 <body>
-    <div id="main">
+    <div id="search-box" class="" style="width: 60%;margin-left: 50px;">
+        <h1>Chrome Cache GUI</h1>
+        <a href="" onclick="window.onbeforeunload=null;location.reload();">Reload</a>
 
-        <div id="left-box">
-
-            <div id="search-box" class="container">
-                <h1>Chrome Cache GUI</h1>
-                <a href="" onclick="window.onbeforeunload=null;location.reload();">Reload</a>
-
-                <div class="input-group" style="margin-top:10px;">
-                    <input type="text" id="cache-dir" class="form-control" placeholder="Chrome Cache Directory" value="">
-                </div>
-                <div class="input-group" style="margin-top:10px;">
-                    <input type="text" id="outputdir" name="outputdir" class="form-control" placeholder="Output Directory"
-                        value="">
-                </div>
-                <div class="input-group" style="margin-top:10px;">
-                    <input type="text" id="query" class="form-control" placeholder="Search URL" value="">
-                </div>
-                <div class="input-group" style="margin-top:10px;">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="use-regex">
-                        <label class="custom-control-label" for="use-regex">Use Regex</label>
-                    </div>
-                </div>
-                <div class="input-group" style="margin-top:10px;">
-                    <input type="number" id="width" class="form-control" placeholder="Width" value="">
-                    <input type="number" id="height" class="form-control" placeholder="Height" value="">
-                    <input type="number" id="aspect_ratio" class="form-control" placeholder="Aspect Ratio" value="" min="0">
-                </div>
-                <div class="input-group" style="margin-top:10px; ">
-                    <div class="custom-control custom-radio" style="margin-right: 10px;">
-                        <input type="radio" class="custom-control-input" id="operator-and" name="operator" checked>
-                        <label class="custom-control-label" for="operator-and">AND</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" class="custom-control-input" id="operator-or" name="operator">
-                        <label class="custom-control-label" for="operator-or">OR</label>
-                    </div>
-                </div>
-                <div class="input-group" style="margin-top:10px;">
-                    <button class="form-control btn btn-success" onclick="onLoadImageButtonClicked();">Search Images</button>
-                    <button class="form-control btn btn-info" onclick="saveAllImages();">Save All</button>
-                </div>
-                <div class="input-group" style="margin-top:10px;">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="random-name" name="random-name">
-                        <label class="custom-control-label" for="random-name">Random Name</label>
-                    </div>
-                </div>
-                <div class="input-group" style="margin-top:10px;display: flex;">
-                    <p name="item-height" style="margin: 5px;"></p>
-                    <input style="flex-grow: 1;width: auto;margin: 5px;" type="range" class="custom-range" min="100"
-                        max="500" id="item-height" name="item-height" fn-oninput="(a,b)=>{b.textContent=a.value;b.checked = a.checked;b.value = a.value;}">
-                </div>
-            </div>
-            <div id="fixed-top" class="fixed-bar">
-                <h3 class="hide-mobile" style="flex-grow: 1;">Chrome Cache GUI</h3>
-                <input type="text" style="max-width: 30%;flex-grow: 2;" class="form-control" placeholder="Output Directory"
-                    value="" name="outputdir">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="random-name-top" name="random-name">
-                    <label class="custom-control-label" for="random-name-top">Random Name</label>
-                </div>
-                <button class="btn btn-outline-info" onclick="saveAllImages();">Save All</button>
-                <button class="btn btn-info" onclick="window.scrollTo(0, 0);">Top</button>
-            </div>
-            <div id="fixed-bottom" class="fixed-bar">
-                <div name="item-height"></div>
-                <input type="range" class="custom-range" min="100" max="500" id="item-height-bottom" name="item-height"
-                    fn-oninput="(a,b)=>{b.textContent=a.value;b.checked = a.checked;b.value = a.value;}" style="flex-grow: 1;">
-            </div>
-            <div id="containera"></div>
-            <div class="container">
-                <p style="display:inline-block;">Copyright © 2019 Sho Sato. All Rights Reserved.
-                    shosatojp2001@gmail.com</p>
-                <a href="" onclick="window.onbeforeunload=null;location.reload();">Reload</a>
-            </div>
-            <div id="information">
-                <div style="position: relative;">
-                    <img id="information-img">
-                    <div id="close-information">
-                        <i class="fas fa-times"></i>
-                    </div>
-                </div>
-
-                <div style="margin:10px;">
-                    <div style="display: flex;justify-content: space-between;">
-                        <h5 id="information-size"></h5>
-                        <i id="information-download" style="cursor: pointer;" class="fas fa-download" key="" onclick=""></i>
-                    </div>
-                    <h3 id="information-key"></h3>
-                    <h4 id="information-header-status"></h4>
-                    <table class="table"></table>
-                </div>
-                <script>
-                    const information = document.querySelector('#information');
-                    document.querySelector('#close-information').addEventListener('click', function () {
-                        information.style.display = 'none';
-                    });
-                    document.querySelector('#information-download').addEventListener('click', async function () {
-                        await saveImage(this);
-                    });
-                </script>
-            </div>
-
+        <div class="input-group" style="margin-top:10px;">
+            <input type="text" id="cache-dir" class="form-control" placeholder="Chrome Cache Directory" value="">
         </div>
-        <!-- <div id="right-box">
-            <div style="width:100%;display: grid;grid-template-rows: 50px 40% auto 50px;">
-                <div style="grid-row-start: 2;display:flex;flex-direction: column;justify-content: center;align-items: center;">
-                    <img id="right-box-img">
-                </div>
-                <div id="right-box-info" style="grid-row-start: 3">
-                    <h3></h3>
-                    <table>
-
-                        <body>
-                        </body>
-                    </table>
-                </div>
+        <div class="input-group" style="margin-top:10px;">
+            <input type="text" id="outputdir" name="outputdir" class="form-control" placeholder="Output Directory"
+                value="">
+        </div>
+        <div class="input-group" style="margin-top:10px;">
+            <input type="text" id="query" class="form-control" placeholder="Search URL" value="">
+        </div>
+        <div class="input-group" style="margin-top:10px;">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="use-regex">
+                <label class="custom-control-label" for="use-regex">Use Regex</label>
             </div>
-        </div> -->
+        </div>
+        <div class="input-group" style="margin-top:10px;">
+            <input type="number" id="width" class="form-control" placeholder="Width" value="">
+            <input type="number" id="height" class="form-control" placeholder="Height" value="">
+            <input type="number" id="aspect_ratio" class="form-control" placeholder="Aspect Ratio" value="" min="0">
+        </div>
+        <div class="input-group" style="margin-top:10px; ">
+            <div class="custom-control custom-radio" style="margin-right: 10px;">
+                <input type="radio" class="custom-control-input" id="operator-and" name="operator" checked>
+                <label class="custom-control-label" for="operator-and">AND</label>
+            </div>
+            <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" id="operator-or" name="operator">
+                <label class="custom-control-label" for="operator-or">OR</label>
+            </div>
+        </div>
+        <div class="input-group" style="margin-top:10px;">
+            <button class="form-control btn btn-success" onclick="onLoadImageButtonClicked();">Search Images</button>
+            <button class="form-control btn btn-info" onclick="saveAllImages();">Save All</button>
+        </div>
+        <div class="input-group" style="margin-top:10px;">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="random-name" name="random-name">
+                <label class="custom-control-label" for="random-name">Random Name</label>
+            </div>
+        </div>
+        <div class="input-group" style="margin-top:10px;display: flex;">
+            <p name="item-height" style="margin: 5px;"></p>
+            <input style="flex-grow: 1;width: auto;margin: 5px;" type="range" class="custom-range" min="100" max="500"
+                id="item-height" name="item-height" fn-oninput="(a,b)=>{b.textContent=a.value;b.checked = a.checked;b.value = a.value;}">
+        </div>
+    </div>
+    <div id="fixed-top" class="fixed-bar">
+        <h3 class="hide-mobile" style="flex-grow: 1;">Chrome Cache GUI</h3>
+        <input type="text" style="max-width: 30%;flex-grow: 2;" class="form-control" placeholder="Output Directory"
+            value="" name="outputdir">
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="random-name-top" name="random-name">
+            <label class="custom-control-label" for="random-name-top">Random Name</label>
+        </div>
+        <button class="btn btn-outline-info" onclick="saveAllImages();">Save All</button>
+        <button class="btn btn-info" onclick="window.scrollTo(0, 0);">Top</button>
+    </div>
+    <div id="fixed-bottom" class="fixed-bar">
+        <div name="item-height"></div>
+        <input type="range" class="custom-range" min="100" max="500" id="item-height-bottom" name="item-height"
+            fn-oninput="(a,b)=>{b.textContent=a.value;b.checked = a.checked;b.value = a.value;}" style="flex-grow: 1;">
+    </div>
+    <div id="containera"></div>
+    <div class="container">
+        <p style="display:inline-block;">Copyright © 2019 Sho Sato. All Rights Reserved.
+            shosatojp2001@gmail.com</p>
+        <a href="" onclick="window.onbeforeunload=null;location.reload();">Reload</a>
+    </div>
+    <div id="information">
+        <div style="position: relative;">
+            <img id="information-img">
+            <div id="close-information" class="center-box">
+                <i class="fas fa-times center-item"></i>
+            </div>
+        </div>
+
+        <div style="margin:10px;">
+            <div style="display: flex;justify-content: space-between;">
+                <h5 id="information-size"></h5>
+                <i id="information-download" style="cursor: pointer;" class="fas fa-download" key="" onclick=""></i>
+            </div>
+            <h3 id="information-key"></h3>
+            <h4 id="information-header-status"></h4>
+            <table class="table"></table>
+        </div>
+        <script>
+            const information = document.querySelector('#information');
+            document.querySelector('#close-information').addEventListener('click', function () {
+                information.style.display = 'none';
+            });
+            document.querySelector('#information-download').addEventListener('click', async function () {
+                await saveImage(this);
+            });
+        </script>
     </div>
 
     <div id="notification" class="alert alert-success notification-item"></div>
@@ -228,22 +207,21 @@
         //scroll bottom to reload
         var ScrollEventFlag = false;
         var SearchBoxHeight = parseInt(window.getComputedStyle(document.querySelector('#search-box')).height);
-        const left_box = document.querySelector('#left-box');
-        left_box.onscroll = async function () {
-            // console.log(window.scrollY, window.innerHeight, document.body.scrollHeight);
-            if ((left_box.scrollTop + window.innerHeight + 600 > left_box.scrollHeight) && !
+        window.onscroll = async function () {
+            if ((window.scrollY + window.innerHeight + 600 > document.body.scrollHeight) && !
                 ScrollEventFlag) {
                 ScrollEventFlag = true;
                 if (images) await listImages(images_index, LOAD_COUNT);
                 ScrollEventFlag = false;
             }
             //fixed-top
-            if (left_box.scrollTop > SearchBoxHeight) {
+            if (window.scrollY > SearchBoxHeight) {
                 document.querySelector('#fixed-top').classList.add('show');
                 document.querySelector('#fixed-bottom').classList.add('show');
             } else {
                 document.querySelector('#fixed-top').classList.remove('show');
                 document.querySelector('#fixed-bottom').classList.remove('show');
+                information.style.display = 'none';
             }
         }
         //load form values and fill chrome cache dir.

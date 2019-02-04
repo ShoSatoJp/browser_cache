@@ -166,3 +166,12 @@ body {}
 #close-information:hover{
     background-color: rgba(0, 0, 0, 0.1);
 }
+
+.center-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.center-item{
+    align-self: center;
+}

@@ -18,6 +18,10 @@ let size_cache = fsJSON(size_cache_json);
 
 var cc;
 
+function Initialize() {
+    cc = null;
+}
+
 function init_chrome_cache(dir) {
     cc = new chrome_cache.ChromeCache(dir, 'temp');
     return cc.keys();
@@ -89,6 +93,8 @@ function findChromeCacheDir() {
         await app.exposeFunction('get_header', get_header);
         await app.exposeFunction('fsJSON', fsJSON);
         await app.exposeFunction('findChromeCacheDir', findChromeCacheDir);
+        await app.exposeFunction('Initialize', Initialize);
+        await app.exposeFunction('gc', global.gc);
         await app.exposeFunction('exit', exit);
         await app.exposeFunction('stat', (path) => {
             return fs.statSync(path);
