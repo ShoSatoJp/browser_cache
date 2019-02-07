@@ -15,13 +15,12 @@
 			"include_dirs": [
 				"<!(node -e \"require('nan')\")",
 				"E:/ProgramFiles/include",
-				"C:/Program Files/vcpkg/installed/x64-windows-static/include",
-				"C:/Program Files/Python36/include"
+				"C:/Program Files/vcpkg/installed/x64-windows-static/include"
 			],
 			"libraries": [
-				"C:/Program Files/vcpkg/installed/x64-windows-static/lib/zlib.lib",
+				"C:/Program Files/vcpkg/packages/zlib_x64-windows-static/debug/lib/zlibd.lib",
 			],
-			"cflags_cc": [ '-fno-exceptions',"/std:c++17" ]
+			"cflags_cc": ["/std:c++17" ]
 		}
 	]
 }

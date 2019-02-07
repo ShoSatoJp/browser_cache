@@ -37,7 +37,7 @@ async function saveForm() {
 async function loadForm() {
     const data = (await fsJSON('form.json')).data;
     const inputs = document.querySelectorAll('input');
-    if (inputs.length === data.length) {
+    if (data.length && (inputs.length === data.length)) {
         inputs.forEach((e, i) => {
             e.value = data[i].value || '';
             e.checked = data[i].checked;

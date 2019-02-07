@@ -1,5 +1,6 @@
 const carlo = require('carlo');
 const chrome_cache = require('./chrome_cache');
+// const chrome_cache = require('../chrome_cache/build/Debug/chrome_cache');
 const path = require('path');
 const fs = require('fs-extra');
 const sizeOf = require('image-size');
@@ -23,6 +24,7 @@ function Initialize() {
 }
 
 function init_chrome_cache(dir) {
+    // if(cc)cc.destruct();
     cc = new chrome_cache.ChromeCache(dir, 'temp');
     return cc.keys();
 }
@@ -38,8 +40,8 @@ function get_header(key) {
 }
 
 function find_save(key, filename, outdir) {
-    if (!fs.existsSync(outdir)) fs.mkdirsSync(outdir);
     try {
+        if (!fs.existsSync(outdir)) fs.mkdirsSync(outdir);
         var file = path.join(outdir, filename);
         if (!fs.existsSync(file))
             cc.find_save(key, file);
@@ -54,6 +56,7 @@ function find_save(key, filename, outdir) {
             return size;
         }
     } catch (error) {
+        console.log(error);
         return false;
     }
 }

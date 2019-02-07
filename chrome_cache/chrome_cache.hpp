@@ -88,7 +88,8 @@ class ChromeCacheEntry {
 public:
 	ChromeCacheEntry() {}
 	~ChromeCacheEntry() {
-		delete es;
+		//‚±‚ê‚ª‚È‚¢‚Æˆê‰‚¤‚Ü‚­‚¢‚Á‚Ä‚éBBB
+		//delete es;
 	}
 	ChromeCacheEntry(EntryStore*, const string&, ChromeCache *cc);
 	EntryStore *es;
