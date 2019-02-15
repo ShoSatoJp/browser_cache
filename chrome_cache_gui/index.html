@@ -77,8 +77,8 @@
         </div>
         <div class="input-group" style="margin-top:10px;display: flex;">
             <p name="item-height" style="margin: 5px;"></p>
-            <input style="flex-grow: 1;width: auto;margin: 5px;" type="range" class="custom-range" min="100" max="500" value="200"
-                id="item-height" name="item-height" fn-oninput="(a,b)=>{b.textContent=a.value;b.checked = a.checked;b.value = a.value;}">
+            <input style="flex-grow: 1;width: auto;margin: 5px;" type="range" class="custom-range" min="100" max="500"
+                value="200" id="item-height" name="item-height" fn-oninput="(a,b)=>{b.textContent=a.value;b.checked = a.checked;b.value = a.value;}">
         </div>
     </div>
     <div id="fixed-top" class="fixed-bar">
@@ -248,6 +248,11 @@
             saveForm();
             await exit();
         }
+
+
+        // window.onbeforeunload=exit;
+
+        // window.addEventListener('beforeunload', exit);
     </script>
 </body>
 
